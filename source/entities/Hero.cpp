@@ -3,30 +3,14 @@
 #include <3ds.h>
 
 Hero::Hero(float x, float y, float z, FlagManager* flagManager) 
-    : Entity(x, y, z,
-        48.0f * Config::globalScale, // ancho
-        48.0f * Config::globalScale, // alto
+    : Entity(x, y, z, 48.0f, 48.0f,
         0, 0, flagManager) 
     {
-        // Cajas de colisión
-        colWidthFront = 16.0f * Config::globalScale;
-        colHeightFront = 24.0f * Config::globalScale;
-        colWidthLateral = colWidthFront;
-        colHeightLateral = colHeightFront;
-        
-        // Offsets centrados y abajo (en los pies)
-        offsetXFront = (width - colWidthFront) / 2.0f;
-        offsetYFront = height - colHeightFront;
-        
-        offsetXLateral = offsetXFront;
-        offsetYLateral = offsetYFront;
-
-        // Valores iniciales
-        colWidth = colWidthFront;
-        colHeight = colHeightFront;
-        offsetX = offsetXFront;
-        offsetY = offsetYFront;
-
+        setCollision(
+            16.0f, 24.0f,
+            (48.0f - 16.0f) / 2.0f,
+            48.0f - 24.0f
+        );
     }
 
 void Hero::init() {}
@@ -93,10 +77,10 @@ void Hero::draw(float camX, float camY) {
 
     C2D_Image img = C2D_SpriteSheetGetImage(spriteSheet, baseIndex + animFrame);
     
-    C2D_DrawImageAt(img, x - camX, y - camY, z, NULL, Config::globalScale, Config::globalScale);
+    C2D_DrawImageAt(img, getRenderX(camX), getRenderY(camY), z, NULL, Config::globalScale, Config::globalScale);
 
     if (Config::showColissions) {
-        // Solo para testeo (borrar luego)
+        // Solo para debug
         C2D_DrawRectSolid(x + offsetX - camX, y + offsetY - camY, z + 0.1f, colWidth, colHeight, C2D_Color32(255, 0, 0, 150));
     }
 }
