@@ -3,6 +3,13 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+# Archivos 3dS
+build/
+*.o
+*.elf
+*.smdh
+*.3dsx
+
 # User-specific files
 *.rsuser
 *.suo
