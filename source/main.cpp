@@ -34,8 +34,8 @@ int main()
     FlagManager flagManager;
 
     // Inicio personaje:
-    float initialX = 2 * 16.0f * Config::globalScale;
-    float initialY = 10 * 16.0f * Config::globalScale;
+    float initialX = 2 * Config::TILE_SIZE;
+    float initialY = 10 * Config::TILE_SIZE;
     SceneManager* manager = new SceneManager(topTarget, bottomTarget);
     manager->changeState(new WorldState(&flagManager, topTarget, "romfs:/data/level_Pruebas", initialX, initialY)); // Empezar en mundo
     

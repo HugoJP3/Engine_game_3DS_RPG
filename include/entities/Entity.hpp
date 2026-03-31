@@ -36,8 +36,8 @@ class Entity {
             float thickness = 5.0f;
             float drawX = (x + offsetX - camX) * Config::globalScale;
             float drawY = (y + offsetY - camY) * Config::globalScale;
-            float scaledSizeX = colWidth;
-            float scaledSizeY = colHeight;
+            float scaledSizeX = colWidth * Config::globalScale;
+            float scaledSizeY = colHeight * Config::globalScale;
 
             C2D_DrawLine(drawX, drawY, colorRect, drawX + scaledSizeX, drawY, colorRect, thickness, debugZ); // Top
             C2D_DrawLine(drawX, drawY + scaledSizeY, colorRect, drawX + scaledSizeX, drawY + scaledSizeY, colorRect, thickness, debugZ); // Bottom

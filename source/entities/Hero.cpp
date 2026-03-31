@@ -32,17 +32,8 @@ void Hero::update(float dt) {
         // Determinar dirección para animación y colisiones dinámicas
         if (abs(dx) > abs(dy)) {
             currentDir = (dx > 0) ? DIR_SIDE_RIGHT : DIR_SIDE_LEFT;
-            
-            colHeight = colHeightLateral;
-            colWidth = colWidthLateral;
-            offsetX = offsetXLateral;
-            offsetY = offsetYLateral;
         } else {
             currentDir = (dy > 0) ? DIR_BACK : DIR_FRONT;
-            colHeight = colHeightFront;
-            colWidth = colWidthFront;
-            offsetX = offsetXFront;
-            offsetY = offsetYFront;
         }
     }
 
@@ -81,7 +72,8 @@ void Hero::draw(float camX, float camY) {
 
     if (Config::showColissions) {
         // Solo para debug
-        C2D_DrawRectSolid(x + offsetX - camX, y + offsetY - camY, z + 0.1f, colWidth, colHeight, C2D_Color32(255, 0, 0, 150));
+        C2D_DrawRectSolid((x + offsetX - camX) * Config::globalScale, (y + offsetY - camY) * Config::globalScale, z + 0.1f,
+            colWidth * Config::globalScale, colHeight * Config::globalScale, C2D_Color32(255, 0, 0, 150));
     }
 }
 

@@ -13,12 +13,6 @@ class Hero : public Entity {
         bool moviendose = false;
         HeroDirection currentDir = DIR_FRONT;
 
-        // Colisiones dinámicas
-        float colWidthFront, colHeightFront; // De frente, el tamaño cambia
-        float colWidthLateral, colHeightLateral; // De lado, el tamaño cambia
-        float offsetXFront, offsetYFront;
-        float offsetXLateral, offsetYLateral;
-
     public:
         Hero(float x, float y, float z, FlagManager* flagManager);
         ~Hero();

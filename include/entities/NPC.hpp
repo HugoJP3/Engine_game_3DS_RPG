@@ -18,7 +18,7 @@ class NPC : public Entity {
         NPC(float x, float y, int width, int height, std::string name, FlagManager* flagManager, int animate, int spriteIdx)
             : Entity(x, y, 0.35,
                     width, height,
-                    width * Config::globalScale, height * Config::globalScale,
+                    width, height,
                     flagManager),
             baseIndex(0), nombre(name), animate(animate), spriteIdx(spriteIdx) {}
 
@@ -74,7 +74,7 @@ class NPC : public Entity {
 
             C2D_Image img = C2D_SpriteSheetGetImage(spriteSheet, baseIndex + spriteIdx);
             
-            C2D_DrawImageAt(img, x - camX, y - camY, z, NULL, Config::globalScale, Config::globalScale);
+            C2D_DrawImageAt(img, getRenderX(camX), getRenderY(camY), z, NULL, Config::globalScale, Config::globalScale);
 
             if (Config::showColissions) {
                 drawCollision(camX, camY);

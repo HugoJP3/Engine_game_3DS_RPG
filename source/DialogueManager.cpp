@@ -122,13 +122,23 @@ void DialogueManager::call_expression(float draw_x, float draw_y, Expression exp
 }
 
 void DialogueManager::call_expression(Entity* ent, float camX, float camY, Expression expression) {    
-    // Calcular posición de la expresión
-    float pos_expression_X = (ent->getX() - camX) + (ent->getWidth() / 2.0f);
-    float pos_expression_Y = (ent->getY() - camY) - (10.0f * Config::globalScale);
+    // 1. Calculamos la posición relativa al centro del personaje en el mundo
+    float mundoX = ent->getX() - camX + (ent->getWidth() / 2.0f);
+    float mundoY = ent->getY() - camY;
 
-    // Imprimir dependencias
+    // 2. Convertimos a coordenadas de pantalla multiplicando por la escala
+    float screenX = mundoX * Config::globalScale;
+    float screenY = mundoY * Config::globalScale;
+
+    // 3. Ajustamos el offset vertical para que flote sobre la cabeza (también escalado)
+    screenY -= 10.0f * Config::globalScale; 
+    
+    // 4. Centramos el icono (si el icono mide 16px, restamos 8 * escala)
+    screenX -= 5.0f * Config::globalScale;
+
+    // Dibujamos
     C2D_Image img = C2D_SpriteSheetGetImage(ui_dialogue, expression);
-    C2D_DrawImageAt(img, pos_expression_X, pos_expression_Y, 0.95f, NULL, Config::globalScale, Config::globalScale);
+    C2D_DrawImageAt(img, screenX, screenY, 0.95f, NULL, Config::globalScale, Config::globalScale);
 }
 
 

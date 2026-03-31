@@ -327,8 +327,8 @@ CollisionType WorldState::checkAllCollisions() {
 // DETECTAR "Interacción" ENTRE PERSONAJE-ENTITY
 Entity* WorldState::getInteractableEntity(float maxDistance) {    
     // Centro del jugador
-    float px = player->getX() + player->getWidth() / 2.0f;
-    float py = player->getY() + player->getHeight() / 2.0f;
+    float px = player->getCenterX();
+    float py = player->getCenterY();
 
     float maxDist2 = maxDistance * maxDistance;
 
@@ -340,8 +340,8 @@ Entity* WorldState::getInteractableEntity(float maxDistance) {
         if (!npc) continue;
 
         // Centro del NPC
-        float nx = npc->getX() + npc->getWidth() / 2.0f;
-        float ny = npc->getY() + npc->getHeight() / 2.0f;
+        float nx = npc->getCenterX();
+        float ny = npc->getCenterY();
 
         float dx = px - nx;
         float dy = py - ny;
@@ -358,8 +358,8 @@ Entity* WorldState::getInteractableEntity(float maxDistance) {
         if (!obj) continue;
 
         // Centro del Objeto
-        float nx = obj->getX() + obj->getWidth() / 2.0f;
-        float ny = obj->getY() + obj->getWidth() / 2.0f;
+        float nx = obj->getCenterX();
+        float ny = obj->getCenterY();
 
         float dx = px - nx;
         float dy = py - ny;
@@ -398,7 +398,7 @@ void WorldState::update(float dt, u32 kDown) {
 
     // -- Interacción ---
     if (kDown & KEY_A) {
-        Entity* ent = getInteractableEntity(Config::TILE_SIZE * Config::globalScale);
+        Entity* ent = getInteractableEntity(Config::INTERACTION_DISTANTE);
 
         if (ent) {
             InteractionContext ctx;
@@ -428,7 +428,7 @@ void WorldState::update(float dt, u32 kDown) {
             if (!nextMapPath.empty()) {
                 manager->changeState(new WorldState(
                     flagManager, top,
-                    nextMapPath, nextX * Config::TILE_SIZE * Config::globalScale, nextY * Config::TILE_SIZE * Config::globalScale));
+                    nextMapPath, nextX * Config::TILE_SIZE, nextY * Config::TILE_SIZE));
                 return; 
             }
             break;
@@ -436,7 +436,7 @@ void WorldState::update(float dt, u32 kDown) {
             if (!prevMapPath.empty()) {
                 manager->changeState(new WorldState(
                     flagManager, top,
-                    prevMapPath, prevX * Config::TILE_SIZE * Config::globalScale, prevY * Config::TILE_SIZE * Config::globalScale));
+                    prevMapPath, prevX * Config::TILE_SIZE, prevY * Config::TILE_SIZE));
                 return;
             }
             break;
@@ -454,7 +454,7 @@ void WorldState::update(float dt, u32 kDown) {
             if (!nextMapPath.empty()) {
                 manager->changeState(new WorldState(
                     flagManager, top,
-                    nextMapPath, nextX * Config::TILE_SIZE * Config::globalScale, nextY * Config::TILE_SIZE * Config::globalScale));
+                    nextMapPath, nextX * Config::TILE_SIZE, nextY * Config::TILE_SIZE));
                 return; 
             }
             break;
@@ -462,7 +462,7 @@ void WorldState::update(float dt, u32 kDown) {
             if (!prevMapPath.empty()) {
                 manager->changeState(new WorldState(
                     flagManager, top,
-                    prevMapPath, prevX * Config::TILE_SIZE * Config::globalScale, prevY * Config::TILE_SIZE * Config::globalScale));
+                    prevMapPath, prevX * Config::TILE_SIZE, prevY * Config::TILE_SIZE));
                 return;
             }
             break;
@@ -470,20 +470,26 @@ void WorldState::update(float dt, u32 kDown) {
             break;
     }
 
-    // ACTUALIZAR CÁMARA
-    camX = player->getX() - 200.0f;
-    camY = player->getY() - 120.0f;
+    // --- ACTUALIZAR CÁMARA ---
+    const float screenW_world = 400.0f / Config::globalScale;
+    const float screenH_world = 240.0f / Config::globalScale;
 
-    // LIMITAR CÁMARA (Para el mapa)
-    float mapaAnchoPxs = mapTilesWidth * Config::TILE_SIZE * Config::globalScale; // Columnas * tamaño tile
-    float mapaAltoPxs = mapTilesHeight * Config::TILE_SIZE * Config::globalScale;  // Filas * tamaño tile
+    // Centrar por el centro del héroe:
+    float heroCenterX = player->getX() + player->getWidth() / 2.0f;
+    float heroCenterY = player->getY() + player->getHeight() / 2.0f;
+
+    camX = heroCenterX - screenW_world / 2.0f;
+    camY = heroCenterY - screenH_world / 2.0f;
+
+    // Tamaño del mapa en mundo (NO escalado)
+    float mapaAncho = mapTilesWidth * Config::TILE_SIZE;
+    float mapaAlto  = mapTilesHeight * Config::TILE_SIZE;
 
     if (camX < 0) camX = 0;
     if (camY < 0) camY = 0;
-    
-    // El límite máximo es el tamaño del mapa menos el tamaño de la pantalla
-    if (camX > mapaAnchoPxs - 400) camX = mapaAnchoPxs - 400;
-    if (camY > mapaAltoPxs - 240) camY = mapaAltoPxs - 240;
+
+    if (camX > mapaAncho - screenW_world) camX = mapaAncho - screenW_world;
+    if (camY > mapaAlto - screenH_world) camY = mapaAlto - screenH_world;
 
     //printf("\nCam: %f, %f\nX, Y: %f, %f\n", camX, camY, player->getX(), player->getY());
 }
@@ -507,7 +513,7 @@ void WorldState::draw() {
     dialogueManager.draw();
 
     if(!dialogueManager.isActive()) {
-        Entity* ent = getInteractableEntity(Config::TILE_SIZE * Config::globalScale);
+        Entity* ent = getInteractableEntity(Config::INTERACTION_DISTANTE);
         if (ent) {
             dialogueManager.call_expression(ent, camX, camY, CHAT);
         }

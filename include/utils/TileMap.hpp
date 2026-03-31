@@ -39,34 +39,37 @@ public:
     }
 
     void draw(float camX, float camY) {
-        float scaledSize = 16.0f * Config::globalScale;
-        float margin = scaledSize;
+        float margin_world = Config::TILE_SIZE;
+        const float screenW_world = 400.0f / Config::globalScale;
+        const float screenH_world = 240.0f / Config::globalScale;
 
         // --- DIBUJADO COLISIONES y TP ---
         if (Config::showColissions && (myCollisionType != NO_COLLISION)) {
-            for (size_t y = 0; y < data.size(); y++) {
-                for (size_t x = 0; x < data[y].size(); x++) {
-                    if (data[y][x] != -1) {
-                        float posX = x * scaledSize;
-                        float posY = y * scaledSize;
+            for (size_t r = 0; r < data.size(); r++) {
+                for (size_t c = 0; c < data[r].size(); c++) {
+                    if (data[r][c] < 0) continue;
+                    
+                    float posX = c * Config::TILE_SIZE;
+                    float posY = r * Config::TILE_SIZE;
 
-                        if (posX >= camX - margin && posX <= camX + 400 + margin &&
-                            posY >= camY - margin && posY <= camY + 240 + margin) {
+                    if (posX >= camX - margin_world && posX <= camX + screenW_world + margin_world &&
+                      posY >= camY - margin_world && posY <= camY + screenH_world + margin_world) {
+                      
+                        float drawX = floorf(posX - camX) * Config::globalScale;
+                        float drawY = floorf(posY - camY) * Config::globalScale;
+
+                        u32 colorRect = C2D_Color32(255, 0, 0, 100);
+                        if ((myCollisionType == TP_NEXT) || (myCollisionType == TP_PREV)) 
+                            colorRect = C2D_Color32(0, 0, 255, 100);
                             
-                            float drawX = floorf(posX - camX);
-                            float drawY = floorf(posY - camY);
+                        float debugZ = 0.8f;
+                        float thickness = 5.0f;
+                        float scaledSize = Config::TILE_SIZE * Config::globalScale;
 
-                            u32 colorRect = C2D_Color32(255, 0, 0, 100);
-                            if ((myCollisionType == TP_NEXT) || (myCollisionType == TP_PREV)) 
-                                {colorRect = C2D_Color32(0, 0, 255, 100);}
-                                
-                                float debugZ = 0.8f;
-                                float thickness = 5.0f;
-                                C2D_DrawLine(drawX, drawY, colorRect, drawX + scaledSize, drawY, colorRect, thickness, debugZ); // Top
-                                C2D_DrawLine(drawX, drawY + scaledSize, colorRect, drawX + scaledSize, drawY + scaledSize, colorRect, thickness, debugZ); // Bottom
-                                C2D_DrawLine(drawX, drawY, colorRect, drawX, drawY + scaledSize, colorRect, thickness, debugZ); // Left
-                                C2D_DrawLine(drawX + scaledSize, drawY, colorRect, drawX + scaledSize, drawY + scaledSize, colorRect, thickness, debugZ); // Right
-                        }
+                         C2D_DrawLine(drawX, drawY, colorRect, drawX + scaledSize, drawY, colorRect, thickness, debugZ);
+                        C2D_DrawLine(drawX, drawY + scaledSize, colorRect, drawX + scaledSize, drawY + scaledSize, colorRect, thickness, debugZ);
+                        C2D_DrawLine(drawX, drawY, colorRect, drawX, drawY + scaledSize, colorRect, thickness, debugZ);
+                        C2D_DrawLine(drawX + scaledSize, drawY, colorRect, drawX + scaledSize, drawY + scaledSize, colorRect, thickness, debugZ);
                     }
                 }
             }
@@ -74,25 +77,24 @@ public:
 
         // --- DIBUJADO TILES ---
         if (myCollisionType == NO_COLLISION) {
-            for (size_t y = 0; y < data.size(); y++) {
-                for (size_t x = 0; x < data[y].size(); x++) {
-                    int tileID = data[y][x];
+            for (size_t r = 0; r < data.size(); r++) {
+                for (size_t c = 0; c < data[r].size(); c++) {
+                    int tileID = data[r][c];
+                    if (tileID < 0) continue;
                     
-                    if (tileID != -1) {
-                        float posX = x * scaledSize;
-                        float posY = y * scaledSize;
+                    float posX = c * Config::TILE_SIZE;
+                    float posY = r * Config::TILE_SIZE;
 
-                        // Culling
-                        if (posX >= camX - margin && posX <= camX + 400 + margin &&
-                            posY >= camY - margin && posY <= camY + 240 + margin) {
-                            
-                            float drawX = floorf(posX - camX);
-                            float drawY = floorf(posY - camY);
+                    // Culling
+                    if (posX >= camX - margin_world && posX <= camX + screenW_world + margin_world &&
+                        posY >= camY - margin_world && posY <= camY + screenH_world + margin_world) {
+                    
+                        float drawX = floorf(posX - camX) * Config::globalScale;
+                        float drawY = floorf(posY - camY) * Config::globalScale;
 
-                            C2D_Image img = C2D_SpriteSheetGetImage(sheet, tileID);
-                            C2D_DrawImageAt(img, drawX, drawY, layerZ, NULL, 
-                                Config::globalScale, Config::globalScale);
-                        }
+                        C2D_Image img = C2D_SpriteSheetGetImage(sheet, tileID);
+                        C2D_DrawImageAt(img, drawX, drawY, layerZ, NULL, 
+                            Config::globalScale, Config::globalScale);
                     }
                 }
             }
@@ -102,10 +104,8 @@ public:
     bool isSolidAt(float worldX, float worldY) {
         if(myCollisionType == NO_COLLISION) return false;
 
-        float scaledTileSize = 16.0f * Config::globalScale;
-
-        int tx = std::floor(worldX / scaledTileSize);
-        int ty = std::floor(worldY / scaledTileSize);
+        int tx = std::floor(worldX / Config::TILE_SIZE);
+        int ty = std::floor(worldY / Config::TILE_SIZE);
 
         if (ty >= 0 && (size_t)ty < data.size() &&
             tx >= 0 && (size_t)tx < data[ty].size()) {

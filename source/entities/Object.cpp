@@ -4,7 +4,7 @@
 Object::Object(float x, float y, float z, int width, int height, int baseIndex, int itemIndex, FlagManager* flagManager)
     : Entity(x, y, z,
         width, height,
-        width * Config::globalScale, height * Config::globalScale,
+        width, height,
         flagManager),
         baseIndex(baseIndex), itemIndex(itemIndex) {}
 
@@ -22,7 +22,7 @@ void Object::draw(float camX, float camY) {
 
     C2D_Image img = C2D_SpriteSheetGetImage(spriteSheet, baseIndex);
     
-    C2D_DrawImageAt(img, x - camX, y - camY, z, NULL, Config::globalScale, Config::globalScale);
+    C2D_DrawImageAt(img, getRenderX(camX), getRenderY(camY), z, NULL, Config::globalScale, Config::globalScale);
 
     if (Config::showColissions) {
         drawCollision(camX, camY);
