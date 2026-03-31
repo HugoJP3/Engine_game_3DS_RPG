@@ -33,7 +33,7 @@ mucha cosa jaja
 CAPAS:::
     collision/tp    = 0.1
     ground          = 0.1
-    decor           = 0.2
+    sub1...subn           = 0.2..0.2n
     furniture       = 0.25
     objects         = 0.3
     hero            = 0.4

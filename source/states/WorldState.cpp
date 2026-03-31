@@ -217,19 +217,23 @@ void WorldState::loadLevelFolder(const std::string& folderPath) {
         if (fileName.find(".csv") != std::string::npos) {
             float z = 0.1f;
 
+            if (fileName.find("prota") != std::string::npos) continue;
             if (fileName.find("ground") != std::string::npos) z = 0.1f;
-            if (fileName.find("decor") != std::string::npos) z = 0.2f;
-            if (fileName.find("furniture") != std::string::npos) z = 0.25f;
+            if (fileName.find("sub1") != std::string::npos) z = 0.20f;
+            if (fileName.find("sub2") != std::string::npos) z = 0.22f;
+            if (fileName.find("sub3") != std::string::npos) z = 0.25f;
+            if (fileName.find("furniture") != std::string::npos) z = 0.3f;
             if (fileName.find("top") != std::string::npos) z = 0.6f;
 
             C2D_SpriteSheet sheet = spriteSheets["tiles"];
+            bool setDynamic = false;
 
             if (fileName.find("furniture") != std::string::npos) {
-                sheet = spriteSheets["furniture"];
+                sheet = spriteSheets["furniture"];                
             }
 
             TileMap* layer = new TileMap(sheet, z);
-            
+            layer->setDynamic(setDynamic);
 
             layer->loadFromCSV(fullPath);
 
@@ -499,11 +503,11 @@ void WorldState::draw() {
     C2D_TargetClear(top, C2D_Color32(0, 0, 50, 255));
     C2D_SceneBegin(top);
 
-    for(TileMap* layer : layers) layer->draw(camX, camY);
+    for(TileMap* layer : layers) layer->draw(camX, camY, player->getX());
     
-    if (collisionLayer && Config::showColissions) collisionLayer->draw(camX, camY);
-    if (tpNext && Config::showColissions) tpNext->draw(camX, camY);
-    if (tpPrev && Config::showColissions) tpPrev->draw(camX, camY);
+    if (collisionLayer && Config::showColissions) collisionLayer->draw(camX, camY, player->getX());
+    if (tpNext && Config::showColissions) tpNext->draw(camX, camY, player->getX());
+    if (tpPrev && Config::showColissions) tpPrev->draw(camX, camY, player->getX());
 
     for(Object* obj : objetos) obj->draw(camX, camY);
     for(NPC* npc : characters) npc->draw(camX, camY);

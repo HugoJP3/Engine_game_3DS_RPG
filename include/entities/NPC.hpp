@@ -54,7 +54,7 @@ class NPC : public Entity {
         std::string getNombre() const { return nombre; }
 
         void updateY(float yPlayer) {
-            // Variar altura con la del personaje
+            // Variar altura con la del personaje (Z dibujado)
             if (yPlayer < y) z = 0.45f;
             else z = 0.35f;
         }

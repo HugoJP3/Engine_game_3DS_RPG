@@ -7,8 +7,8 @@ Hero::Hero(float x, float y, float z, FlagManager* flagManager)
         0, 0, flagManager) 
     {
         setCollision(
-            16.0f, 24.0f,
-            (48.0f - 16.0f) / 2.0f,
+            48.0f, 20.0f,
+            (48.0f - 48.0f) / 2.0f,
             48.0f - 24.0f
         );
     }

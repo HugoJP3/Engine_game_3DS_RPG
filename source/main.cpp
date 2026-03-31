@@ -34,10 +34,10 @@ int main()
     FlagManager flagManager;
 
     // Inicio personaje:
-    float initialX = 2 * Config::TILE_SIZE;
-    float initialY = 10 * Config::TILE_SIZE;
+    float initialX = 10 * Config::TILE_SIZE;
+    float initialY = 11 * Config::TILE_SIZE;
     SceneManager* manager = new SceneManager(topTarget, bottomTarget);
-    manager->changeState(new WorldState(&flagManager, topTarget, "romfs:/data/level_Pruebas", initialX, initialY)); // Empezar en mundo
+    manager->changeState(new WorldState(&flagManager, topTarget, "romfs:/data/1_casa_interior", initialX, initialY)); // Empezar en mundo
     
     // Delta Time:
     u64 tiempoAnterior = osGetTime();

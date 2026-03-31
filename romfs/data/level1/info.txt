@@ -1,5 +1,5 @@
 size 30 20
-next_map romfs:/data/level_Pruebas
-next_spawn 2 10
-prev_map romfs:/data/level_Pruebas
-prev_spawn 28 10
+next_map romfs:/data/1_casa_interior
+next_spawn 10 11
+prev_map romfs:/data/1_casa_interior
+prev_spawn 10 11

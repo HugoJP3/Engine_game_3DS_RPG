@@ -1,5 +1,0 @@
-size 30 20
-next_map romfs:/data/level1
-next_spawn 2 10
-prev_map romfs:/data/level1
-prev_spawn 28 10

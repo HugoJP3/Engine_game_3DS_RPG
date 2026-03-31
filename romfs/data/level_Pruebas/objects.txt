@@ -1,3 +1,0 @@
-basic_plants 11 300 250 0.3 16 16 1 BAYA_FRUTO 0
-basic_plants 6 350 250 0.3 16 16 1 BAYA_BOLSA 1
-basic_plants 5 400 250 0.3 16 16 1 TRIGO_FRUTO 2

@@ -1,8 +1,15 @@
-Corregir dependencia a tile de tamaño 16.0f
-- Los objetos definen tamaños específicos en la entrada
-- Hacer que getInteractable sea con Entity y devuelva Entity más cercana solamente
-- Hacer que getInteractable no tenga entrada *16.0f sino otra cosa más exacta
+personaje hitbox dinámica según a donde mire
+- variables duplicadas para cada pose (hacer struct)
+- evitar que se quede atrapado entre bloques y cosas así
 
+
+diálogos
+- diálogo debe seguir después de un choice
+
+
+npc acompañante/zorro
+- puede moverse (nosotros nos quedamos quietos)
+- diferentes diálogos
 
 
 historia
