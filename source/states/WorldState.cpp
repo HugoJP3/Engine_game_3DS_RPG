@@ -515,7 +515,7 @@ void WorldState::draw() {
     if(!dialogueManager.isActive()) {
         Entity* ent = getInteractableEntity(Config::INTERACTION_DISTANTE);
         if (ent) {
-            dialogueManager.call_expression(ent, camX, camY, CHAT);
+            dialogueManager.call_expression(ent, camX, camY);
         }
     }
 }

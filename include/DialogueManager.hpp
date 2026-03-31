@@ -7,14 +7,6 @@
 #include "utils/Config.hpp"
 #include "entities/Entity.hpp"
 
-class NPC;
-
-typedef enum {
-    ALERTED = 3,
-    CHAT,
-    CONFUSED
-} Expression;
-
 struct DialogueChoice {
     std::string text; // Elección
     std::vector<std::pair<std::string, bool>> flagsOnSelect; // Flags asociadas a elecciones
@@ -63,7 +55,7 @@ class DialogueManager {
         void draw();
         
         void call_expression(float draw_x, float draw_y, Expression expresion);
-        void call_expression(Entity* ent, float camX, float camY, Expression expresion);
+        void call_expression(Entity* ent, float camX, float camY);
         
         bool isActive() const { return active; }
 };

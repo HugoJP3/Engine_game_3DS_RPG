@@ -6,6 +6,12 @@
 class DialogueManager;
 class Inventory;
 
+typedef enum {
+    ALERTED = 3,
+    CHAT,
+    CONFUSED
+} Expression;
+
 // Cuando se dé una interacción básica
 struct InteractionContext {
     DialogueManager* dialogueManager;
@@ -63,7 +69,9 @@ class Entity {
         virtual void update(float dt) = 0;
         virtual void draw(float camX, float camY) = 0;
 
+        // --- INTERACCIÓN/FEEDBACK CON HERO ---
         virtual void onInteract(InteractionContext& ctx) = 0;
+        virtual Expression getInteractableExpression() const = 0;
 
         // --- INICIALIZACIÓN ---
         void setSpriteSheet(C2D_SpriteSheet sheet) { spriteSheet = sheet; }

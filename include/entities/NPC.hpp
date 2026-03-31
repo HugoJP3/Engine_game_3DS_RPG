@@ -14,6 +14,8 @@ class NPC : public Entity {
 
         float animTimer = 0.0f; // 0-0.15f
 
+        Expression currentMood = CHAT;
+
     public:
         NPC(float x, float y, int width, int height, std::string name, FlagManager* flagManager, int animate, int spriteIdx)
             : Entity(x, y, 0.35,
@@ -80,6 +82,9 @@ class NPC : public Entity {
                 drawCollision(camX, camY);
             }
         }
+
+        Expression getInteractableExpression() const override { return currentMood; }
+        void setMood(Expression m) { currentMood = m; }
 
         void onInteract(InteractionContext& ctx) {
             if (ctx.dialogueManager) {

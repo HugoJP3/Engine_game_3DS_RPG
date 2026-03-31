@@ -22,6 +22,7 @@ class Hero : public Entity {
         void draw(float camX, float camY) override;
 
         void onInteract(InteractionContext& ctx) override {}
+        Expression getInteractableExpression() const override { return CONFUSED; }
         
         void moveX(float dt);
         void moveY(float dt);

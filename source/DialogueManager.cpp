@@ -121,7 +121,9 @@ void DialogueManager::call_expression(float draw_x, float draw_y, Expression exp
     C2D_DrawImageAt(img, draw_x, draw_y, 0.95f, NULL, Config::globalScale, Config::globalScale);
 }
 
-void DialogueManager::call_expression(Entity* ent, float camX, float camY, Expression expression) {    
+void DialogueManager::call_expression(Entity* ent, float camX, float camY) {
+    Expression expression = ent->getInteractableExpression();
+
     // 1. Calculamos la posición relativa al centro del personaje en el mundo
     float mundoX = ent->getX() - camX + (ent->getWidth() / 2.0f);
     float mundoY = ent->getY() - camY;
@@ -134,11 +136,11 @@ void DialogueManager::call_expression(Entity* ent, float camX, float camY, Expre
     screenY -= 10.0f * Config::globalScale; 
     
     // 4. Centramos el icono (si el icono mide 16px, restamos 8 * escala)
-    screenX -= 5.0f * Config::globalScale;
+    screenX -= 2.5f * Config::globalScale;
 
     // Dibujamos
     C2D_Image img = C2D_SpriteSheetGetImage(ui_dialogue, expression);
-    C2D_DrawImageAt(img, screenX, screenY, 0.95f, NULL, Config::globalScale, Config::globalScale);
+    C2D_DrawImageAt(img, screenX, screenY, 0.95f, NULL, Config::globalScale * 1.25, Config::globalScale * 1.25f);
 }
 
 

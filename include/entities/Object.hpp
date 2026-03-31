@@ -21,8 +21,8 @@ class Object : public Entity {
 
         int getItemIndex() const{ return itemIndex; }
 
+        Expression getInteractableExpression() const override { return ALERTED; }
         void onInteract(InteractionContext& ctx) override;
-
         void setFlag(std::string flag) { flagOnGet = flag; }
         void takeObject();
 };
