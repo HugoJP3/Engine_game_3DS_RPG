@@ -1,0 +1,54 @@
+npc Antonio
+position 200 200
+size 37 31
+sprite characters 0 0
+
+branch
+    when none
+    say
+        Hola, caracola!
+    end
+end
+
+branch
+    when Hablado false
+    say
+        ¿Quién eres?\nTienes pinta de ser guay.
+    end
+
+    choice No quiero hablar
+        set Hablado true
+        set Cabron true
+    end
+
+    choice Puedo ser tu amigo
+        set Hablado true
+        set Majete true
+    end
+end
+
+branch
+    when Majete true
+    say
+        Eres una persona muy maja.
+        Te recuerdo.
+    end
+end
+
+branch
+    when Cabron true
+    say
+        Me cago en todo.
+        Te voy a matar.
+    end
+
+    choice Perdóname
+        set Majete true
+        set Cabron false
+    end
+
+    choice Cómete un cagao
+        set Hablado false
+        set Cabron false
+    end
+end

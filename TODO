@@ -1,0 +1,16 @@
+Corregir dependencia a tile de tamaño 16.0f
+- Los objetos definen tamaños específicos en la entrada
+- Hacer que getInteractable sea con Entity y devuelva Entity más cercana solamente
+- Hacer que getInteractable no tenga entrada *16.0f sino otra cosa más exacta
+
+
+
+historia
+
+sprites
+
+niveles
+
+audio
+
+mejorar visual (efectos, partículas, pantallas de carga...)

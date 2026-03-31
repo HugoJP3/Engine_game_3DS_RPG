@@ -1,0 +1,10 @@
+--atlas
+--format rgba8888
+
+ui/dialogue/dialogue_box.png
+ui/dialogue/dialogue_name_holder.png
+ui/dialogue/dialogue_cursor.png
+
+ui/dialogue/expression_alerted_4x9.png
+ui/dialogue/expression_chat_9x9.png
+ui/dialogue/expression_confused_7x10.png
