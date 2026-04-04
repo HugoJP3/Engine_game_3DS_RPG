@@ -1,3 +1,4 @@
+
 personaje hitbox dinámica según a donde mire
 - variables duplicadas para cada pose (hacer struct)
 - evitar que se quede atrapado entre bloques y cosas así
