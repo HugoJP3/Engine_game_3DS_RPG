@@ -14,15 +14,12 @@ private:
 
     C2D_SpriteSheet sheet;
     float layerZ = 0.1f;
-    bool isDynamic = false; // capas que varían su "z" en función de la posición del jugador
 
     CollisionType myCollisionType = NO_COLLISION; // Matriz es de colisiones
 
 public:
     TileMap(C2D_SpriteSheet s, float z, CollisionType collision = NO_COLLISION)
         : sheet(s), layerZ(z), myCollisionType(collision) {}
-
-    void setDynamic(bool d) { isDynamic = d; }
 
     void loadFromCSV(std::string path) {
         std::ifstream file(path);
@@ -94,11 +91,6 @@ public:
                     
                         float drawX = floorf(posX - camX) * Config::globalScale;
                         float drawY = floorf(posY - camY) * Config::globalScale;
-
-                        if (isDynamic) {
-                            if (yPlayer < posY) layerZ = 0.45f;
-                            else layerZ = 0.35f;
-                        }
 
                         C2D_Image img = C2D_SpriteSheetGetImage(sheet, tileID);
                         C2D_DrawImageAt(img, drawX, drawY, layerZ, NULL, 

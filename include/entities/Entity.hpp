@@ -18,6 +18,11 @@ struct InteractionContext {
     Inventory* inventory;
 };
 
+struct Collision {
+    float width, height;
+    float offsetX, offsetY;
+};
+
 class Entity {
     protected:
         // General
@@ -25,8 +30,7 @@ class Entity {
         float width, height; // Tamaño lógico, sin escala
 
         // Lógica colisiones, sin escala
-        float colWidth, colHeight;
-        float offsetX = 0.0f, offsetY = 0.0f;
+        Collision collision;
 
         bool solid = false;
 
@@ -40,10 +44,10 @@ class Entity {
             u32 colorRect = C2D_Color32(0, 255, 0, 100);
             float debugZ = 0.8f;
             float thickness = 5.0f;
-            float drawX = (x + offsetX - camX) * Config::globalScale;
-            float drawY = (y + offsetY - camY) * Config::globalScale;
-            float scaledSizeX = colWidth * Config::globalScale;
-            float scaledSizeY = colHeight * Config::globalScale;
+            float drawX = (x + collision.offsetX - camX) * Config::globalScale;
+            float drawY = (y + collision.offsetY - camY) * Config::globalScale;
+            float scaledSizeX = collision.width * Config::globalScale;
+            float scaledSizeY = collision.height * Config::globalScale;
 
             C2D_DrawLine(drawX, drawY, colorRect, drawX + scaledSizeX, drawY, colorRect, thickness, debugZ); // Top
             C2D_DrawLine(drawX, drawY + scaledSizeY, colorRect, drawX + scaledSizeX, drawY + scaledSizeY, colorRect, thickness, debugZ); // Bottom
@@ -58,10 +62,10 @@ class Entity {
             FlagManager* flagManager)
             : x(x), y(y), z(z),
             width(w), height(h),
-            colWidth(colW), colHeight(colH),
-            offsetX(0), offsetY(0),
             spriteSheet(nullptr), flagManager(flagManager),
-            pendingRemoval(false) {}
+            pendingRemoval(false) {
+                collision = {colW, colH, 0, 0};
+            }
         
         virtual ~Entity() {}
 
@@ -91,18 +95,14 @@ class Entity {
         float getHeight() const { return height; }
 
         // --- HITBOX ---
-        float getColWidth() const {return colWidth; }
-        float getColHeight() const {return colHeight; }
+        float getColWidth() const {return collision.width; }
+        float getColHeight() const {return collision.height; }
 
-        float getOffsetX() const { return offsetX; }
-        float getOffsetY() const { return offsetY; }
+        float getOffsetX() const { return collision.offsetX; }
+        float getOffsetY() const { return collision.offsetY; }
 
-        void setCollision(float w, float h, float offX, float offY) {
-            colWidth = w;
-            colHeight = h;
-            offsetX = offX;
-            offsetY = offY;
-        }
+        void setCollision(float w, float h, float offX, float offY) { collision = {w, h, offX, offY}; }
+        void setCollision(Collision c) { collision = c; }
 
         // --- CENTRO ---
         float getCenterX() const { return x + width / 2.0f; }
@@ -118,13 +118,13 @@ class Entity {
         // --- MÉTODO COLISIÓN ---
         bool checkCollision(Entity& other)
         {         
-            float offset1X = offsetX;
-            float offset1Y = offsetY;
+            float offset1X = collision.offsetX;
+            float offset1Y = collision.offsetY;
             
             float left1 = x + offset1X;
-            float right1 = x + offset1X + colWidth;
+            float right1 = x + offset1X + collision.width;
             float top1 = y + offset1Y;
-            float bottom1 = y + offset1Y + colHeight;
+            float bottom1 = y + offset1Y + collision.height;
 
             float offset2X = other.getOffsetX();
             float offset2Y = other.getOffsetY();

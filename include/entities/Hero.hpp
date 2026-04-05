@@ -13,6 +13,7 @@ class Hero : public Entity {
         bool moviendose = false;
         HeroDirection currentDir = DIR_FRONT;
 
+        
     public:
         Hero(float x, float y, float z, FlagManager* flagManager);
         ~Hero();

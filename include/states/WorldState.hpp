@@ -22,6 +22,14 @@
 #include "DialogueManager.hpp"
 #include "states/FlagManager.hpp"
 #include "utils/TextParser.hpp"
+#include <functional>
+
+
+struct RenderItem {
+    float zLayer;     // capa base (ground, entities, overhead…)
+    float ySort;      // profundidad dentro de la capa
+    std::function<void()> drawFunc;
+};
 
 class WorldState : public State {
     private:

@@ -7,9 +7,9 @@ Hero::Hero(float x, float y, float z, FlagManager* flagManager)
         0, 0, flagManager) 
     {
         setCollision(
-            48.0f, 20.0f,
-            (48.0f - 48.0f) / 2.0f,
-            48.0f - 24.0f
+            32.0f, 20.0f,
+            (48.0f - 32.0f) / 2.0f,
+            48.0f - 20.0f + 2.0f
         );
     }
 
@@ -32,9 +32,12 @@ void Hero::update(float dt) {
         // Determinar dirección para animación y colisiones dinámicas
         if (abs(dx) > abs(dy)) {
             currentDir = (dx > 0) ? DIR_SIDE_RIGHT : DIR_SIDE_LEFT;
-        } else {
-            currentDir = (dy > 0) ? DIR_BACK : DIR_FRONT;
         }
+        
+        // Descomentar para activar sprites "hacia arriba/abajo"
+        //else {
+        //    currentDir = (dy > 0) ? DIR_BACK : DIR_FRONT;
+        //}
     }
 
     // Animación
@@ -72,8 +75,8 @@ void Hero::draw(float camX, float camY) {
 
     if (Config::showColissions) {
         // Solo para debug
-        C2D_DrawRectSolid((x + offsetX - camX) * Config::globalScale, (y + offsetY - camY) * Config::globalScale, z + 0.1f,
-            colWidth * Config::globalScale, colHeight * Config::globalScale, C2D_Color32(255, 0, 0, 150));
+        C2D_DrawRectSolid((x + collision.offsetX - camX) * Config::globalScale, (y + collision.offsetY - camY) * Config::globalScale, z + 0.1f,
+            collision.width * Config::globalScale, collision.height * Config::globalScale, C2D_Color32(255, 0, 0, 150));
     }
 }
 

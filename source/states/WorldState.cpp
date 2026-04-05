@@ -216,6 +216,7 @@ void WorldState::loadLevelFolder(const std::string& folderPath) {
 
         if (fileName.find(".csv") != std::string::npos) {
             float z = 0.1f;
+            C2D_SpriteSheet sheet = spriteSheets["tiles"];
 
             if (fileName.find("prota") != std::string::npos) continue;
             if (fileName.find("ground") != std::string::npos) z = 0.1f;
@@ -225,15 +226,11 @@ void WorldState::loadLevelFolder(const std::string& folderPath) {
             if (fileName.find("furniture") != std::string::npos) z = 0.3f;
             if (fileName.find("top") != std::string::npos) z = 0.6f;
 
-            C2D_SpriteSheet sheet = spriteSheets["tiles"];
-            bool setDynamic = false;
-
             if (fileName.find("furniture") != std::string::npos) {
-                sheet = spriteSheets["furniture"];                
+                sheet = spriteSheets["furniture"];     
             }
 
             TileMap* layer = new TileMap(sheet, z);
-            layer->setDynamic(setDynamic);
 
             layer->loadFromCSV(fullPath);
 
@@ -500,19 +497,54 @@ void WorldState::update(float dt, u32 kDown) {
 
 // DIBUJAR:
 void WorldState::draw() {
+    std::vector<RenderItem> renderList;
+    for (TileMap* layer : layers) {
+        renderList.push_back({
+            layer->getZ(),
+            0.0f, // no importa dentro de la capa
+            [=]() { layer->draw(camX, camY, 0); }
+        });
+    }
+
+    for (Entity* e : characters) {
+        renderList.push_back({
+            0.5f, // capa entidades
+            e->getY() + e->getHeight(),
+            [=]() { e->draw(camX, camY); }
+        });
+    }
+
+    for (Entity* e : objetos) {
+        renderList.push_back({
+            0.5f,
+            e->getY() + e->getHeight(),
+            [=]() { e->draw(camX, camY); }
+        });
+    }
+
+    renderList.push_back({
+        0.5f,
+        player->getY() + player->getHeight(),
+        [=]() { player->draw(camX, camY); }
+    });
+
+    std::sort(renderList.begin(), renderList.end(),
+        [](const RenderItem& a, const RenderItem& b) {
+            if (a.zLayer == b.zLayer)
+                return a.ySort < b.ySort;
+            return a.zLayer < b.zLayer;
+    });
+
     C2D_TargetClear(top, C2D_Color32(0, 0, 50, 255));
     C2D_SceneBegin(top);
 
-    for(TileMap* layer : layers) layer->draw(camX, camY, player->getX());
+    for (auto& item : renderList) {
+        item.drawFunc();
+    }
     
     if (collisionLayer && Config::showColissions) collisionLayer->draw(camX, camY, player->getX());
     if (tpNext && Config::showColissions) tpNext->draw(camX, camY, player->getX());
     if (tpPrev && Config::showColissions) tpPrev->draw(camX, camY, player->getX());
-
-    for(Object* obj : objetos) obj->draw(camX, camY);
-    for(NPC* npc : characters) npc->draw(camX, camY);
-    
-    player->draw(camX, camY);
 
     dialogueManager.draw();
 

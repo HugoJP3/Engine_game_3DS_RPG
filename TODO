@@ -1,15 +1,11 @@
-
-personaje hitbox dinámica según a donde mire
-- variables duplicadas para cada pose (hacer struct)
-- evitar que se quede atrapado entre bloques y cosas así
-
+cambiar sistema de tp para permitir múltiples destinos
+- worldstate: vector tp
+- info.txt
+- .csv
+- tp1...tpn
 
 diálogos
 - diálogo debe seguir después de un choice
-
-
-cambiar sistema de tp para permitir múltiples destinos
-- tp1...tpn
 
 
 ¿npc acompañante/zorro?
