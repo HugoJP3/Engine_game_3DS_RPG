@@ -8,7 +8,11 @@ diálogos
 - diálogo debe seguir después de un choice
 
 
-npc acompañante/zorro
+cambiar sistema de tp para permitir múltiples destinos
+- tp1...tpn
+
+
+¿npc acompañante/zorro?
 - puede moverse (nosotros nos quedamos quietos)
 - diferentes diálogos
 
