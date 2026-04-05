@@ -5,7 +5,7 @@
 
 class Hero : public Entity {
     private:
-        static constexpr float velocidad = 150.0f; // Velocidad movimiento
+        static constexpr float velocidad = 100.0f; // Velocidad movimiento
         float dx = 0, dy = 0; // X, Y anteriores a movimiento
 
         float animTimer = 0.0f; // 0-0.15f
