@@ -3,17 +3,19 @@
 #include <3ds.h>
 
 Hero::Hero(float x, float y, float z, FlagManager* flagManager) 
-    : Entity(x, y, z, 48.0f, 48.0f,
+    : Entity(x, y, z, 25.0f, 15.0f,
         0, 0, flagManager) 
     {
         setCollision(
-            32.0f, 20.0f,
-            (48.0f - 32.0f) / 2.0f,
-            48.0f - 20.0f + 2.0f
+            23.0f, 8.0f,
+            (25.0f - 23.0f) / 2.0f,
+            15.0f - 8.0f + 2.0f
         );
     }
 
-void Hero::init() {}
+void Hero::init() {
+    currentDir = DIR_SIDE_RIGHT;
+}
 
 void Hero::update(float dt) {
     circlePosition pos;
@@ -30,14 +32,15 @@ void Hero::update(float dt) {
         moviendose = true;
 
         // Determinar dirección para animación y colisiones dinámicas
-        if (abs(dx) > abs(dy)) {
-            currentDir = (dx > 0) ? DIR_SIDE_RIGHT : DIR_SIDE_LEFT;
-        }
-        
-        // Descomentar para activar sprites "hacia arriba/abajo"
+        //if (abs(dx) > abs(dy)) {
+        //    currentDir = (dx > 0) ? DIR_SIDE_RIGHT : DIR_SIDE_LEFT;
+        //}
         //else {
         //    currentDir = (dy > 0) ? DIR_BACK : DIR_FRONT;
         //}
+
+        currentDir = (dx > 0) ? DIR_SIDE_RIGHT : DIR_SIDE_LEFT;
+
     }
 
     // Animación

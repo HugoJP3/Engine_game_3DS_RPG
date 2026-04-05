@@ -535,7 +535,7 @@ void WorldState::draw() {
             return a.zLayer < b.zLayer;
     });
 
-    C2D_TargetClear(top, C2D_Color32(0, 0, 50, 255));
+    C2D_TargetClear(top, C2D_Color32(0, 0, 0, 255));
     C2D_SceneBegin(top);
 
     for (auto& item : renderList) {
