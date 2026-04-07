@@ -4,9 +4,6 @@ cambiar sistema de tp para permitir múltiples destinos
 - .csv
 - tp1...tpn
 
-diálogos
-- diálogo debe seguir después de un choice
-
 modelar mapas
 
 añadir npcs con diálogos

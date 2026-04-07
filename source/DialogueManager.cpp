@@ -16,7 +16,30 @@ DialogueManager::~DialogueManager() {
 
 }
 
-void DialogueManager::startDialogue(const DialogueBranch dialogueBranch, std::string name) {
+DialogueBranch DialogueManager::getNextBranch() {
+    for (int i = allBranches.size() - 1; i >= 0; i--) {
+        const auto& b = allBranches[i];
+
+        if (b.conditionFlag.empty() || b.conditionFlag == "none")
+            continue;
+
+        if (flagManager->getFlag(b.conditionFlag) == b.expectedValue) {
+            return b;
+        }
+    }
+
+    for (const auto& b : allBranches) {
+        if (b.conditionFlag == "none" || b.conditionFlag.empty()) {
+            return b;
+        }
+    }
+
+    return allBranches[0];
+}
+
+void DialogueManager::startDialogue(const std::vector<DialogueBranch>& branches, std::string name) {
+    allBranches = branches;
+    DialogueBranch dialogueBranch = getNextBranch();
     if (dialogueBranch.lines.empty()) return;
     if (name.empty()) return;
 
@@ -56,8 +79,13 @@ void DialogueManager::update(float dt, u32 kDown) {
                 flagManager->setFlag(f.first, f.second);
             }
 
-            active = false;
             inChoiceMode = false;
+
+            // recalcular branch
+            DialogueBranch next = getNextBranch();
+            currentBranch = next;
+            currentLineIdx = 0,
+            charIdx = 0;
         }
 
         return; // Mientras haya elección, no se manipula el resto

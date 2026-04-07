@@ -1,5 +1,5 @@
 npc Antonio
-position 15 7
+position 20 15
 size 37 31
 sprite characters 0 0
 

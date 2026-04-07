@@ -29,6 +29,7 @@ class DialogueManager {
         // Datos diálogo
         DialogueBranch currentBranch;
         std::string character_name = "";
+        std::vector<DialogueBranch> allBranches;
         
         size_t currentLineIdx = 0;
         size_t charIdx = 0;
@@ -45,11 +46,13 @@ class DialogueManager {
 
         bool active = false;
 
+        DialogueBranch getNextBranch();
+
     public:
         DialogueManager(FlagManager* flagManager);
         ~DialogueManager();
 
-        void startDialogue(const DialogueBranch dialogueBranch, std::string name);
+        void startDialogue(const std::vector<DialogueBranch>& branches, std::string name);
         void update(float dt, u32 kDown);
 
         void draw();

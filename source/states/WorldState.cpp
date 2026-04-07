@@ -6,7 +6,7 @@ WorldState::WorldState(FlagManager* flagManager, C3D_RenderTarget* screen, std::
 // GENERAR UN OBJETO
 void WorldState::spawnObject(std::string sheetName, int idx, float x, float y, float z, int width, int height, int itemIndex) {
     if (spriteSheets.count(sheetName)) {
-        Object* obj = new Object(x, y, z, width, height, idx, itemIndex, flagManager);
+        Object* obj = new Object(x*Config::TILE_SIZE, y*Config::TILE_SIZE, z, width, height, idx, itemIndex, flagManager);
         obj->setSpriteSheet(spriteSheets[sheetName]);
         obj->init();
 
@@ -156,7 +156,7 @@ void WorldState::loadNPC(const std::string& path) {
     }
 
     // Añadir elementos al NPC
-    NPC* npc = new NPC(x, y, npcWidth, npcHeight, npcName, flagManager, animate, spriteIdx);
+    NPC* npc = new NPC(x*Config::TILE_SIZE, y*Config::TILE_SIZE, npcWidth, npcHeight, npcName, flagManager, animate, spriteIdx);
     for (auto& b : parsedBranches) {
         npc->addBranch(b);
     }

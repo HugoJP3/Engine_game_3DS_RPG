@@ -89,7 +89,7 @@ class NPC : public Entity {
         void onInteract(InteractionContext& ctx) {
             if (ctx.dialogueManager) {
                 ctx.dialogueManager->startDialogue(
-                    this->getCurrentDialogo(),
+                    this->branches,
                     this->getName()
                 );
             }
