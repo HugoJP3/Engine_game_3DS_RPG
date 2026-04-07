@@ -5,8 +5,7 @@
 typedef enum {
     NO_COLLISION=0,
     COLLISION,
-    TP_PREV,
-    TP_NEXT,
+    TP
 } CollisionType;
 
 #endif

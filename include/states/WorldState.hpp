@@ -24,6 +24,11 @@
 #include "utils/TextParser.hpp"
 #include <functional>
 
+struct Teleport {
+    TileMap* layer;
+    std::string targetMap;
+    float spawnX, spawnY;
+};
 
 struct RenderItem {
     float zLayer;     // capa base (ground, entities, overhead…)
@@ -39,16 +44,13 @@ class WorldState : public State {
         C3D_RenderTarget* top;
         
         std::string mapPath;
-        std::string nextMapPath, prevMapPath;
         float initialX, initialY;
-        float nextX = 0, nextY = 0, prevX = 0, prevY = 0;
 
         std::map<std::string, C2D_SpriteSheet> spriteSheets;
         int mapTilesWidth, mapTilesHeight;
 
         Hero* player;
-        TileMap* tpPrev = nullptr; // Capa de tp área anterior
-        TileMap* tpNext = nullptr; // Capa de tp área siguiente
+        std::vector<Teleport> teleports; // Capa de teleports
         TileMap* collisionLayer = nullptr; // Capa de colisiones
         std::vector<TileMap*> layers; // Capas  de tiles
         std::vector<Object*> objetos; // Capa de objetos
@@ -70,6 +72,7 @@ class WorldState : public State {
         void draw() override;
 
         Entity* getInteractableEntity(float maxDistance);
+        Teleport* checkTeleportCollision();
         bool checkLayerCollisions(TileMap* layer, float px, float py);
         CollisionType checkAllCollisions();
 

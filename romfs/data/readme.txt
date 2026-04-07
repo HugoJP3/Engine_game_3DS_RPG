@@ -14,21 +14,15 @@ levelX/
     decor.csv
     top.csv
     collision.csv = Colisiones invisibles
-    tpNext.csv
-    tpPrev.csv
+    _tp.csv ...
     objects.txt
     info.txt
 
 info.txt:::
-next_map romfs:/data/level_Pruebas
-next_spawn 300 300
-prev_map romfs:/data/level_Pruebas
-prev_spawn 400 160
-
+tp <nombre> <mapa_destino> <spawnX> <spawnY>
 
 personaje.npc.txt:::
-mucha cosa jaja
-
+mucha cosa
 
 CAPAS:::
     collision/tp    = 0.1

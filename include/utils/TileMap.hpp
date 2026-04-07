@@ -15,7 +15,7 @@ private:
     C2D_SpriteSheet sheet;
     float layerZ = 0.1f;
 
-    CollisionType myCollisionType = NO_COLLISION; // Matriz es de colisiones
+    CollisionType myCollisionType = NO_COLLISION;
 
 public:
     TileMap(C2D_SpriteSheet s, float z, CollisionType collision = NO_COLLISION)
@@ -59,14 +59,14 @@ public:
                         float drawY = floorf(posY - camY) * Config::globalScale;
 
                         u32 colorRect = C2D_Color32(255, 0, 0, 100);
-                        if ((myCollisionType == TP_NEXT) || (myCollisionType == TP_PREV)) 
+                        if (myCollisionType == TP) 
                             colorRect = C2D_Color32(0, 0, 255, 100);
                             
                         float debugZ = 0.8f;
                         float thickness = 5.0f;
                         float scaledSize = Config::TILE_SIZE * Config::globalScale;
 
-                         C2D_DrawLine(drawX, drawY, colorRect, drawX + scaledSize, drawY, colorRect, thickness, debugZ);
+                        C2D_DrawLine(drawX, drawY, colorRect, drawX + scaledSize, drawY, colorRect, thickness, debugZ);
                         C2D_DrawLine(drawX, drawY + scaledSize, colorRect, drawX + scaledSize, drawY + scaledSize, colorRect, thickness, debugZ);
                         C2D_DrawLine(drawX, drawY, colorRect, drawX, drawY + scaledSize, colorRect, thickness, debugZ);
                         C2D_DrawLine(drawX + scaledSize, drawY, colorRect, drawX + scaledSize, drawY + scaledSize, colorRect, thickness, debugZ);

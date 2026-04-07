@@ -208,53 +208,86 @@ void WorldState::loadLevelFolder(const std::string& folderPath) {
     DIR* dir = opendir(folderPath.c_str());
     if (!dir) return;
 
+    std::map<std::string, Teleport> teleportInfo;
+
     struct dirent* ent;
     while ((ent = readdir(dir)) != NULL) {
         std::string fileName = ent->d_name;
         std::string fullPath = folderPath + "/" + fileName;
+        
+        // --- INFO.TXT ---
+        if (fileName == "info.txt") {
+            std::ifstream infoFile(fullPath);
+            std::string key;
 
+            while (infoFile >> key) {
+                if (key == "size") {
+                    infoFile >> mapTilesWidth >> mapTilesHeight;
+                }
+                else if (key == "tp") {
+                    Teleport newTp;
+                    std::string fileName;
 
-        if (fileName.find(".csv") != std::string::npos) {
-            float z = 0.1f;
+                    infoFile >> fileName >> newTp.targetMap >> newTp.spawnX >> newTp.spawnY;
+                    
+                    teleportInfo[fileName] = newTp;
+                }
+            }
+        }
+
+        // --- CSV ---
+        else if (fileName.find(".csv") != std::string::npos) {
+            
             C2D_SpriteSheet sheet = spriteSheets["tiles"];
+            float z = 0.5f;
 
-            if (fileName.find("prota") != std::string::npos) continue;
-            if (fileName.find("ground") != std::string::npos) z = 0.1f;
-            if (fileName.find("sub1") != std::string::npos) z = 0.20f;
-            if (fileName.find("sub2") != std::string::npos) z = 0.22f;
-            if (fileName.find("sub3") != std::string::npos) z = 0.25f;
-            if (fileName.find("furniture") != std::string::npos) z = 0.3f;
-            if (fileName.find("top") != std::string::npos) z = 0.6f;
-
-            if (fileName.find("furniture") != std::string::npos) {
-                sheet = spriteSheets["furniture"];     
+            // Colisiones
+            if (fileName.find("collision") != std::string::npos) {
+                TileMap* layer = new TileMap(sheet, 0.5f);
+                layer->loadFromCSV(fullPath);
+                layer->setSolid(COLLISION);
+                collisionLayer = layer;
             }
 
-            TileMap* layer = new TileMap(sheet, z);
+            // Teleports
+            else if (fileName.find("_tp") != std::string::npos) {
+                TileMap* layer = new TileMap(sheet, 0.5f);
+                layer->loadFromCSV(fullPath);
+                layer->setSolid(TP);
 
-            layer->loadFromCSV(fullPath);
+                // Buscar configuración en info.txt
+                Teleport tp = teleportInfo[fileName];
+                tp.layer = layer;
 
-            if (fileName.find("tpPrev") != std::string::npos) { layer->setSolid(TP_PREV); tpPrev = layer; }
-            else if (fileName.find("tpNext") != std::string::npos) { layer->setSolid(TP_NEXT); tpNext = layer; }
-            else if (fileName.find("collision") != std::string::npos) { layer->setSolid(COLLISION); collisionLayer = layer; }
+                teleports.push_back(tp);
+            }
+
+            // Capas normales
             else {
+                if (fileName.find("debug") != std::string::npos) continue;
+                if (fileName.find("ground") != std::string::npos) z = 0.1f;
+                if (fileName.find("sub1") != std::string::npos) z = 0.20f;
+                if (fileName.find("sub2") != std::string::npos) z = 0.22f;
+                if (fileName.find("sub3") != std::string::npos) z = 0.25f;
+                if (fileName.find("furniture") != std::string::npos) z = 0.3f;
+                if (fileName.find("top") != std::string::npos) z = 0.6f;
+
+                if (fileName.find("furniture") != std::string::npos) {
+                    sheet = spriteSheets["furniture"];     
+                }
+
+                TileMap* layer = new TileMap(sheet, z);
+                layer->loadFromCSV(fullPath);
                 layers.push_back(layer);
             }
         }
-        else if (fileName == "info.txt") {
-            std::ifstream infoFile(fullPath);
-            std::string key;
-            while (infoFile >> key) {
-                if (key == "next_map") infoFile >> nextMapPath;
-                else if (key == "next_spawn") infoFile >> nextX >> nextY;
-                else if (key == "prev_map") infoFile >> prevMapPath;
-                else if (key == "prev_spawn") infoFile >> prevX >> prevY;
-                else if (key == "size") infoFile >> mapTilesWidth >> mapTilesHeight;
-            }
-        }
+
+        // --- OBJETOS.TXT ---
         else if (fileName == "objects.txt") {
             loadObject(fullPath);
         }
+
+        // --- .NPC ---
         else if (fileName.find(".npc") != std::string::npos) {
             loadNPC(fullPath);
         }
@@ -285,7 +318,7 @@ void WorldState::init() {
     camY = player->getY();
 }
 
-// CHECK COLISIONES: 0=NoColision, 1=Colision, 2=TP_Prev, 3=TP_Next
+// CHECK COLISIONES: 0=NoColision, 1=Colision
 bool WorldState::checkLayerCollisions(TileMap* layer, float px, float py) {
     if (!layer) return false;
 
@@ -302,14 +335,24 @@ bool WorldState::checkLayerCollisions(TileMap* layer, float px, float py) {
             layer->isSolidAt(right - 1.0f, bottom - 1.0f));
 }
 
+Teleport* WorldState::checkTeleportCollision() {
+    float px = player->getX();
+    float py = player->getY();
+
+    for (auto& tp : teleports) {
+        if (checkLayerCollisions(tp.layer, px, py)) {
+            return &tp;
+        }
+    }
+    return nullptr;
+}
+
 CollisionType WorldState::checkAllCollisions() {
     float px = player->getX();
     float py = player->getY();
 
     if (checkLayerCollisions(collisionLayer, px, py)) return COLLISION;
-    if (checkLayerCollisions(tpPrev, px, py)) return TP_PREV;
-    if (checkLayerCollisions(tpNext, px, py)) return TP_NEXT;
-
+    
     for(Object* obj : objetos) {
         if (obj->isSolid() && player->checkCollision(*obj)) {
             return COLLISION;
@@ -421,54 +464,26 @@ void WorldState::update(float dt, u32 kDown) {
 
     // --- Movimiento en X ---
     player->moveX(dt);
-    switch (checkAllCollisions()) {
-        case COLLISION:
-            player->setX(oldX);
-            break;
-        case TP_NEXT:
-            if (!nextMapPath.empty()) {
-                manager->changeState(new WorldState(
-                    flagManager, top,
-                    nextMapPath, nextX * Config::TILE_SIZE, nextY * Config::TILE_SIZE));
-                return; 
-            }
-            break;
-        case TP_PREV:
-            if (!prevMapPath.empty()) {
-                manager->changeState(new WorldState(
-                    flagManager, top,
-                    prevMapPath, prevX * Config::TILE_SIZE, prevY * Config::TILE_SIZE));
-                return;
-            }
-            break;
-        default:
-            break;
+    if (checkAllCollisions() == COLLISION) {
+        player->setX(oldX);
     }
 
     // --- Movimiento en Y ---
     player->moveY(dt);
-    switch (checkAllCollisions()) {
-        case COLLISION:
-            player->setY(oldY);
-            break;
-        case TP_NEXT:
-            if (!nextMapPath.empty()) {
-                manager->changeState(new WorldState(
-                    flagManager, top,
-                    nextMapPath, nextX * Config::TILE_SIZE, nextY * Config::TILE_SIZE));
-                return; 
-            }
-            break;
-        case TP_PREV:
-            if (!prevMapPath.empty()) {
-                manager->changeState(new WorldState(
-                    flagManager, top,
-                    prevMapPath, prevX * Config::TILE_SIZE, prevY * Config::TILE_SIZE));
-                return;
-            }
-            break;
-        default:
-            break;
+    if (checkAllCollisions() == COLLISION) {
+        player->setY(oldY);
+    }
+
+    // --- TP ---
+    Teleport* tp = checkTeleportCollision();
+    if (tp) {
+        manager->changeState(new WorldState(
+            flagManager, top,
+            tp->targetMap,
+            tp->spawnX * Config::TILE_SIZE,
+            tp->spawnY * Config::TILE_SIZE
+        ));
+        return;
     }
 
     // --- ACTUALIZAR CÁMARA ---
@@ -542,9 +557,12 @@ void WorldState::draw() {
         item.drawFunc();
     }
     
-    if (collisionLayer && Config::showColissions) collisionLayer->draw(camX, camY, player->getX());
-    if (tpNext && Config::showColissions) tpNext->draw(camX, camY, player->getX());
-    if (tpPrev && Config::showColissions) tpPrev->draw(camX, camY, player->getX());
+    if (Config::showColissions) {
+        if (collisionLayer) collisionLayer->draw(camX, camY, player->getX());
+        for (auto& tp : teleports) {
+            tp.layer->draw(camX, camY, player->getX());
+        }
+    }
 
     dialogueManager.draw();
 
@@ -565,9 +583,11 @@ WorldState::~WorldState() {
     for(TileMap* layer : layers) delete layer;
     layers.clear();
 
-    if (tpPrev) delete tpPrev;
-    if (tpNext) delete tpNext;
     if (collisionLayer) delete collisionLayer;
+
+    for (auto& tp : teleports) {
+        delete tp.layer;
+    }
 
     if (player) delete player;
 

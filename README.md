@@ -7,4 +7,4 @@ Desarrollado sin fines comerciales como hobby :)
 
 Para optener el "game.3dsx" necesitas ejecutar el Makefile con las librerías instaladas, y los paths correctos.
 
-Todas las imágenes las extraje de fuentes externas por lo que no son de mi dominio y están diseñadas para fines no comerciales.
+Todas las imágenes y audio las extraje de fuentes externas por lo que no son de mi dominio y están diseñadas para fines no comerciales.
