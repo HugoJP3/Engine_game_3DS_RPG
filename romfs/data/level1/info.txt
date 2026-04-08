@@ -1,5 +1,0 @@
-size 30 20
-next_map romfs:/data/1_casa_interior
-next_spawn 10 11
-prev_map romfs:/data/1_casa_interior
-prev_spawn 10 11

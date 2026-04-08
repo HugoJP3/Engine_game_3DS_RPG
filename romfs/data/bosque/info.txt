@@ -1,0 +1,2 @@
+size 100 25
+tp bosque_casa1_tp.csv romfs:/data/casa_interior 24 5

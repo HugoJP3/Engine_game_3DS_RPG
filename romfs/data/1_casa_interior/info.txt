@@ -1,2 +1,0 @@
-size 30 20
-tp casa_inicio_1_bosque1_tp romfs:/data/level1 2 10
