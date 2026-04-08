@@ -1,24 +1,15 @@
-cambiar sistema de tp para permitir múltiples destinos
-- modelar mapa bosque para probar
+modelar todos los mapas
+
+TP mantiene dirección del personaje
 
 diálogos con animación
 - default = none
-
-modelar mapas
 
 añadir npcs con diálogos
 
 añadir objetos
 
-¿npc acompañante/zorro?
-- puede moverse (nosotros nos quedamos quietos)
-- diferentes diálogos
-
 historia
-
-sprites
-
-niveles
 
 audio
 
