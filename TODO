@@ -1,8 +1,8 @@
 cambiar sistema de tp para permitir múltiples destinos
-- worldstate: vector tp
-- info.txt
-- .csv
-- tp1...tpn
+- modelar mapa bosque para probar
+
+diálogos con animación
+- default = none
 
 modelar mapas
 
