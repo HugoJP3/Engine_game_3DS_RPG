@@ -156,7 +156,11 @@ void WorldState::loadNPC(const std::string& path) {
     }
 
     // Añadir elementos al NPC
-    NPC* npc = new NPC(x*Config::TILE_SIZE, y*Config::TILE_SIZE, npcWidth, npcHeight, npcName, flagManager, animate, spriteIdx);
+    NPC* npc = new NPC(x*Config::TILE_SIZE, y*Config::TILE_SIZE,
+                    npcWidth, npcHeight,
+                    npcWidth, npcHeight/2,
+                    npcName, flagManager,
+                    animate, spriteIdx);
     for (auto& b : parsedBranches) {
         npc->addBranch(b);
     }

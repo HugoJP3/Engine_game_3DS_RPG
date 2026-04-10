@@ -17,10 +17,10 @@ class NPC : public Entity {
         Expression currentMood = CHAT;
 
     public:
-        NPC(float x, float y, int width, int height, std::string name, FlagManager* flagManager, int animate, int spriteIdx)
+        NPC(float x, float y, int width, int height, int colW, int colH, std::string name, FlagManager* flagManager, int animate, int spriteIdx)
             : Entity(x, y, 0.35,
                     width, height,
-                    width, height,
+                    colW, colH,
                     flagManager),
             baseIndex(0), nombre(name), animate(animate), spriteIdx(spriteIdx) {}
 

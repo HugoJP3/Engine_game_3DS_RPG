@@ -65,6 +65,7 @@ class Entity {
             spriteSheet(nullptr), flagManager(flagManager),
             pendingRemoval(false) {
                 collision = {colW, colH, 0, 0};
+                if (height != colH) collision.offsetY = (height - colH);
             }
         
         virtual ~Entity() {}
