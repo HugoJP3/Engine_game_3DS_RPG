@@ -55,8 +55,8 @@ public:
                     if (posX >= camX - margin_world && posX <= camX + screenW_world + margin_world &&
                       posY >= camY - margin_world && posY <= camY + screenH_world + margin_world) {
                       
-                        float drawX = floorf(posX - camX) * Config::globalScale;
-                        float drawY = floorf(posY - camY) * Config::globalScale;
+                        float drawX = std::floorf(posX - camX) * Config::globalScale;
+                        float drawY = std::floorf(posY - camY) * Config::globalScale;
 
                         u32 colorRect = C2D_Color32(255, 0, 0, 100);
                         if (myCollisionType == TP) 
@@ -89,8 +89,8 @@ public:
                     if (posX >= camX - margin_world && posX <= camX + screenW_world + margin_world &&
                         posY >= camY - margin_world && posY <= camY + screenH_world + margin_world) {
                     
-                        float drawX = floorf(posX - camX) * Config::globalScale;
-                        float drawY = floorf(posY - camY) * Config::globalScale;
+                        float drawX = std::floorf(posX - camX) * Config::globalScale;
+                        float drawY = std::floorf(posY - camY) * Config::globalScale;
 
                         C2D_Image img = C2D_SpriteSheetGetImage(sheet, tileID);
                         C2D_DrawImageAt(img, drawX, drawY, layerZ, NULL, 
