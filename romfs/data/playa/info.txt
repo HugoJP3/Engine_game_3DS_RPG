@@ -1,0 +1,2 @@
+size 60 40
+tp playa_pueblo_tp.csv romfs:/data/pueblo 9 62

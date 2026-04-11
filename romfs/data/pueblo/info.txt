@@ -1,2 +1,3 @@
 size 50 65
 tp pueblo_bosque_tp.csv romfs:/data/bosque 68 22
+tp pueblo_playa_tp.csv romfs:/data/playa 23 1
