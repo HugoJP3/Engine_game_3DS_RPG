@@ -209,21 +209,22 @@ void WorldState::loadObject(const std::string& path) {
 
 // CARGAR CARPETA (con TILESET y PERSONAJES/OBJETOS).
 void WorldState::loadLevelFolder(const std::string& folderPath) {
+    std::map<std::string, Teleport> teleportInfo;
+
     DIR* dir = opendir(folderPath.c_str());
     if (!dir) return;
 
-    std::map<std::string, Teleport> teleportInfo;
-
     struct dirent* ent;
-    while ((ent = readdir(dir)) != NULL) {
+    // PRIMERA PASADA
+    // --- INFO.TXT ---
+    while((ent = readdir(dir)) != NULL) {
         std::string fileName = ent->d_name;
-        std::string fullPath = folderPath + "/" + fileName;
-        
-        // --- INFO.TXT ---
-        if (fileName == "info.txt") {
-            std::ifstream infoFile(fullPath);
-            std::string key;
 
+        if (fileName == "info.txt") {
+            std::string fullPath = folderPath + "/" + fileName;
+            std::ifstream infoFile(fullPath);
+            
+            std::string key;
             while (infoFile >> key) {
                 if (key == "size") {
                     infoFile >> mapTilesWidth >> mapTilesHeight;
@@ -238,6 +239,26 @@ void WorldState::loadLevelFolder(const std::string& folderPath) {
                 }
             }
         }
+    }
+    closedir(dir);
+    
+    // SEGUNDA PASADA
+    dir = opendir(folderPath.c_str());
+    if (!dir) return;
+
+    while ((ent = readdir(dir)) != NULL) {
+        std::string fileName = ent->d_name;
+        std::string fullPath = folderPath + "/" + fileName;
+
+        // --- OBJETOS.TXT ---
+        if (fileName == "objects.txt") {
+            loadObject(fullPath);
+        }
+
+        // --- .NPC ---
+        else if (fileName.find(".npc") != std::string::npos) {
+            loadNPC(fullPath);
+        }
 
         // --- CSV ---
         else if (fileName.find(".csv") != std::string::npos) {
@@ -247,7 +268,7 @@ void WorldState::loadLevelFolder(const std::string& folderPath) {
 
             // Colisiones
             if (fileName.find("collision") != std::string::npos) {
-                TileMap* layer = new TileMap(sheet, 0.5f);
+                TileMap* layer = new TileMap(sheet, z);
                 layer->loadFromCSV(fullPath);
                 layer->setSolid(COLLISION);
                 collisionLayer = layer;
@@ -255,7 +276,7 @@ void WorldState::loadLevelFolder(const std::string& folderPath) {
 
             // Teleports
             else if (fileName.find("_tp") != std::string::npos) {
-                TileMap* layer = new TileMap(sheet, 0.5f);
+                TileMap* layer = new TileMap(sheet, z);
                 layer->loadFromCSV(fullPath);
                 layer->setSolid(TP);
 
@@ -268,6 +289,7 @@ void WorldState::loadLevelFolder(const std::string& folderPath) {
 
             // Capas normales
             else {
+                // Detectar altura (def. = 0.1f):
                 if (fileName.find("debug") != std::string::npos) continue;
                 if (fileName.find("ground") != std::string::npos) z = 0.1f;
                 if (fileName.find("sub1") != std::string::npos) z = 0.20f;
@@ -276,24 +298,14 @@ void WorldState::loadLevelFolder(const std::string& folderPath) {
                 if (fileName.find("furniture") != std::string::npos) z = 0.3f;
                 if (fileName.find("top") != std::string::npos) z = 0.6f;
 
-                if (fileName.find("furniture") != std::string::npos) {
-                    sheet = spriteSheets["furniture"];     
-                }
+                // Detectar sheet (opcional)
+                if (fileName.find("furniture") != std::string::npos) sheet = spriteSheets["furniture"];     
+                if (fileName.find("other") != std::string::npos) {sheet = spriteSheets["other"]; z+=0.01f;}
 
                 TileMap* layer = new TileMap(sheet, z);
                 layer->loadFromCSV(fullPath);
                 layers.push_back(layer);
             }
-        }
-
-        // --- OBJETOS.TXT ---
-        else if (fileName == "objects.txt") {
-            loadObject(fullPath);
-        }
-
-        // --- .NPC ---
-        else if (fileName.find(".npc") != std::string::npos) {
-            loadNPC(fullPath);
         }
     }
 
@@ -306,6 +318,7 @@ void WorldState::init() {
     spriteSheets["hero"] = C2D_SpriteSheetLoad("romfs:/gfx/hero.t3x");
     spriteSheets["basic_plants"] = C2D_SpriteSheetLoad("romfs:/gfx/basic_plants.t3x");
     spriteSheets["tiles"] = C2D_SpriteSheetLoad("romfs:/gfx/tileset.t3x");
+    spriteSheets["other"] = C2D_SpriteSheetLoad("romfs:/gfx/tileset_other.t3x");
     spriteSheets["furniture"] = C2D_SpriteSheetLoad("romfs:/gfx/furniture.t3x");
     spriteSheets["characters"] = C2D_SpriteSheetLoad("romfs:/gfx/characters.t3x");
     
