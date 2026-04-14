@@ -300,7 +300,9 @@ void WorldState::loadLevelFolder(const std::string& folderPath) {
 
                 // Detectar sheet (opcional)
                 if (fileName.find("furniture") != std::string::npos) sheet = spriteSheets["furniture"];     
-                if (fileName.find("other") != std::string::npos) {sheet = spriteSheets["other"]; z+=0.01f;}
+                if (fileName.find("other") != std::string::npos) {sheet = spriteSheets["other"]; z+=0.01f;} 
+                if (fileName.find("efecto") != std::string::npos) {sheet = spriteSheets["efectos"]; z+=0.02f;}
+                if (fileName.find("ruinas") != std::string::npos) {sheet = spriteSheets["ruinas"]; z+=0.03f;}
 
                 TileMap* layer = new TileMap(sheet, z);
                 layer->loadFromCSV(fullPath);
@@ -314,11 +316,15 @@ void WorldState::loadLevelFolder(const std::string& folderPath) {
 
 // CREACIÓN DEL MAPA:
 void WorldState::init() {
+    Sound music = AudioManager::get().loadWav("romfs:/audio/house.wav");
+    AudioManager::get().playBGM(music);
 
     spriteSheets["hero"] = C2D_SpriteSheetLoad("romfs:/gfx/hero.t3x");
     spriteSheets["basic_plants"] = C2D_SpriteSheetLoad("romfs:/gfx/basic_plants.t3x");
     spriteSheets["tiles"] = C2D_SpriteSheetLoad("romfs:/gfx/tileset.t3x");
     spriteSheets["other"] = C2D_SpriteSheetLoad("romfs:/gfx/tileset_other.t3x");
+    spriteSheets["ruinas"] = C2D_SpriteSheetLoad("romfs:/gfx/ruinas.t3x");
+    spriteSheets["efectos"] = C2D_SpriteSheetLoad("romfs:/gfx/efectos.t3x");
     spriteSheets["furniture"] = C2D_SpriteSheetLoad("romfs:/gfx/furniture.t3x");
     spriteSheets["characters"] = C2D_SpriteSheetLoad("romfs:/gfx/characters.t3x");
     
@@ -459,6 +465,9 @@ void WorldState::update(float dt, u32 kDown) {
 
     // -- Interacción ---
     if (kDown & KEY_A) {
+        Sound click = AudioManager::get().loadWav("romfs:/audio/click.wav");
+        AudioManager::get().playSFX(click);
+
         Entity* ent = getInteractableEntity(Config::INTERACTION_DISTANTE);
 
         if (ent) {

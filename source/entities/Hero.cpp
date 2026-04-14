@@ -2,7 +2,7 @@
 #include "entities/Hero.hpp"
 #include <3ds.h>
 
-Hero::Hero(float x, float y, float z, FlagManager* flagManager) 
+Hero::Hero(float x, float y, float z, FlagManager* flagManager)
     : Entity(x, y, z, 25.0f, 15.0f,
         0, 0, flagManager) 
     {

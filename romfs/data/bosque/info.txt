@@ -1,3 +1,4 @@
 size 100 25
 tp bosque_casa1_tp.csv romfs:/data/casa_interior 24 5
 tp bosque_pueblo_tp.csv romfs:/data/pueblo 8 1
+tp bosque_medieval_tp.csv romfs:/data/medieval 1 7

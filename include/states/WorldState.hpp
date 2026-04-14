@@ -23,6 +23,8 @@
 #include "states/FlagManager.hpp"
 #include "utils/TextParser.hpp"
 #include <functional>
+#include "AudioManager.hpp"
+
 
 struct Teleport {
     TileMap* layer;

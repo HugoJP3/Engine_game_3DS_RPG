@@ -6,6 +6,7 @@
 #include "states/WorldState.hpp"
 #include "states/FlagManager.hpp"
 #include "utils/Config.hpp"
+#include "AudioManager.hpp"
 
 // Iniciar RomFS para poder leer archivos de la SD
 bool romfsInit_Seguro() {
@@ -30,9 +31,10 @@ int main()
     C3D_RenderTarget* topTarget = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
     C3D_RenderTarget* bottomTarget = C2D_CreateScreenTarget(GFX_BOTTOM, GFX_LEFT);
 
-    // FLAGS GLOBALES:
+    // MANAGERS GLOBALES:
     FlagManager flagManager;
-
+    AudioManager::get().init();
+    
     // Inicio personaje:
     float initialX = 10 * Config::TILE_SIZE;
     float initialY = 11 * Config::TILE_SIZE;
@@ -97,6 +99,7 @@ int main()
 
         // APLICACIÓN
         manager->update(dt, kDown);
+        AudioManager::get().update();
 
         C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
         manager->draw();
@@ -105,6 +108,7 @@ int main()
 
     // Limpieza
     delete manager;
+    AudioManager::get().exit();
     romfsExit();
     cfguExit();
     C2D_Fini();
