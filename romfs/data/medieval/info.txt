@@ -1,2 +1,3 @@
 size 70 30
+music tension.wav
 tp medieval_bosque_tp.csv romfs:/data/bosque 97 11

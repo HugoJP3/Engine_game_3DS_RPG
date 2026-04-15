@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <citro2d.h>
 #include "utils/Config.hpp"
+#include "AudioManager.hpp"
 
 class DialogueManager;
 class Inventory;

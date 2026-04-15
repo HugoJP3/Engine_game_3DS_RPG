@@ -1,2 +1,3 @@
 size 30 20
+music casa.wav
 tp casa_inicio_1_bosque1_tp.csv romfs:/data/bosque 12 12

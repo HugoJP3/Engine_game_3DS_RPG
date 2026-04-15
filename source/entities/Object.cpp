@@ -31,6 +31,8 @@ void Object::draw(float camX, float camY) {
 
 void Object::takeObject() {
     flagManager->setFlag(flagOnGet, true);
+    Sound& object = AudioManager::get().getSound("romfs:/audio/object.wav");
+    AudioManager::get().playSFX(object);
 }
 
 void Object::onInteract(InteractionContext& ctx) {

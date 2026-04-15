@@ -229,6 +229,16 @@ void WorldState::loadLevelFolder(const std::string& folderPath) {
                 if (key == "size") {
                     infoFile >> mapTilesWidth >> mapTilesHeight;
                 }
+                else if (key == "music") {
+                    AudioManager::get().stopBGM();
+
+                    std::string dirMusic;
+                    infoFile >> dirMusic;
+                    dirMusic = "romfs:/audio/" + dirMusic;
+
+                    Sound& music = AudioManager::get().getSound(dirMusic);
+                    AudioManager::get().playBGM(music, dirMusic);
+                }
                 else if (key == "tp") {
                     Teleport newTp;
                     std::string fileName;
@@ -316,9 +326,6 @@ void WorldState::loadLevelFolder(const std::string& folderPath) {
 
 // CREACIÓN DEL MAPA:
 void WorldState::init() {
-    Sound music = AudioManager::get().loadWav("romfs:/audio/house.wav");
-    AudioManager::get().playBGM(music);
-
     spriteSheets["hero"] = C2D_SpriteSheetLoad("romfs:/gfx/hero.t3x");
     spriteSheets["basic_plants"] = C2D_SpriteSheetLoad("romfs:/gfx/basic_plants.t3x");
     spriteSheets["tiles"] = C2D_SpriteSheetLoad("romfs:/gfx/tileset.t3x");
@@ -465,9 +472,6 @@ void WorldState::update(float dt, u32 kDown) {
 
     // -- Interacción ---
     if (kDown & KEY_A) {
-        Sound click = AudioManager::get().loadWav("romfs:/audio/click.wav");
-        AudioManager::get().playSFX(click);
-
         Entity* ent = getInteractableEntity(Config::INTERACTION_DISTANTE);
 
         if (ent) {
@@ -482,6 +486,9 @@ void WorldState::update(float dt, u32 kDown) {
                 if (it != objetos.end()) objetos.erase(it);
                 delete ent;
             }
+        } else {
+            Sound& click = AudioManager::get().getSound("romfs:/audio/click.wav");
+            AudioManager::get().playSFX(click);
         }
     }
 
@@ -602,7 +609,7 @@ void WorldState::draw() {
 
 
 // ELIMINAR (LIBERAR RECURSOS)
-WorldState::~WorldState() {
+WorldState::~WorldState() {    
     for(Object* obj : objetos) delete obj;
     objetos.clear();
 

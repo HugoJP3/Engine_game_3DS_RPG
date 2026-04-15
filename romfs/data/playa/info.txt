@@ -1,2 +1,3 @@
 size 60 40
+music final.wav
 tp playa_pueblo_tp.csv romfs:/data/pueblo 9 62

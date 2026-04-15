@@ -2,6 +2,8 @@
 #include <3ds.h>
 #include <string>
 #include <vector>
+#include <map>
+#include <list>
 
 struct Sound {
     void* data = nullptr;
@@ -19,21 +21,30 @@ public:
     void exit();
     void update();
 
-    Sound loadWav(const std::string& path);
+    Sound& getSound(const std::string& path);
 
-    void playBGM(const Sound& sound);
+    void playBGM(const Sound& sound, const std::string& path);
     void stopBGM();
+
     void playSFX(const Sound& sound);
 
 private:
     AudioManager() = default;
     
+    Sound loadWav(const std::string& path);
+    void freeSound(Sound& s);
+
     static const int BGM_CHANNEL = 0;
     static const int SFX_START = 1;
     static const int SFX_CHANNELS = 7;
 
+    std::string currentBgmPath;
+
     ndspWaveBuf bgmBuf;
     std::vector<ndspWaveBuf> sfxBufs;
+
+    std::map<std::string, Sound> cache;
+    std::list<std::string> lruOrder;
 
     int getFreeSFXChannel();
 };

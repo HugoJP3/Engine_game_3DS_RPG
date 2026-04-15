@@ -3,17 +3,11 @@
 #include <cstring>
 
 void AudioManager::init() {
-    Result r = ndspInit();
-    if (R_FAILED(r)) {
-        return;
-    }
-
+    ndspInit();
     ndspSetOutputMode(NDSP_OUTPUT_STEREO);
-    sfxBufs.resize(SFX_CHANNELS);
 
-    for (auto& buf : sfxBufs) {
-        memset(&buf, 0, sizeof(ndspWaveBuf));
-    }
+    sfxBufs.resize(SFX_CHANNELS);
+    for (auto& b : sfxBufs) memset(&b, 0, sizeof(ndspWaveBuf));
 }
 
 AudioManager& AudioManager::get() {
@@ -23,7 +17,55 @@ AudioManager& AudioManager::get() {
 
 
 void AudioManager::exit() {
+    for (auto& pair : cache) {
+        freeSound(pair.second);
+    }
+    cache.clear();
+
     ndspExit();
+}
+
+Sound& AudioManager::getSound(const std::string& path) {
+    // Si ya está, devolver + LRU
+    if (cache.count(path)) {
+        lruOrder.remove(path);
+        lruOrder.push_back(path);
+        return cache[path];
+    }
+
+    // Intenta cargar
+    Sound s = loadWav(path);
+    
+    // Si no hay memoria → liberar hasta que funcione
+    while (!s.data) {
+
+        if (lruOrder.empty()) {
+            // No queda nada que liberar → imposible cargar
+            static Sound empty;
+            return empty;
+        }
+
+        // Liberar el más antiguo
+        std::string oldest = lruOrder.front();
+        if (oldest == currentBgmPath) {
+            lruOrder.pop_front();
+            lruOrder.push_back(oldest);
+            continue;
+        }
+
+        lruOrder.pop_front();
+        freeSound(cache[oldest]);
+        cache.erase(oldest);
+
+        // Reintentar
+        s = loadWav(path);
+    }
+
+    // Guardar en caché
+    cache[path] = s;
+    lruOrder.push_back(path);
+
+    return cache[path];
 }
 
 void AudioManager::update() {
@@ -37,10 +79,9 @@ void AudioManager::update() {
 
 Sound AudioManager::loadWav(const std::string& path) {
     Sound s;
+
     FILE* f = fopen(path.c_str(), "rb");
-    if (!f) {
-        return s;
-    }
+    if (!f) return s;
 
     char riff[4];
     fread(riff, 1, 4, f);
@@ -53,7 +94,6 @@ Sound AudioManager::loadWav(const std::string& path) {
 
     u16 channels;
     fread(&channels, sizeof(u16), 1, f);
-
     fread(&s.sampleRate, sizeof(u32), 1, f);
 
     fseek(f, 34, SEEK_SET);
@@ -79,7 +119,6 @@ Sound AudioManager::loadWav(const std::string& path) {
 
     s.size = chunkSize;
     s.data = linearAlloc(s.size);
-
     if (!s.data) {
         fclose(f);
         return s;
@@ -95,11 +134,10 @@ Sound AudioManager::loadWav(const std::string& path) {
 }
 
 
-void AudioManager::playBGM(const Sound& s) {
-    if (!s.data || s.size == 0) {
-        return;
-    }
-
+void AudioManager::playBGM(const Sound& s, const std::string& path) {
+    if (!s.data || s.size == 0) return;
+    currentBgmPath = path;
+    
     ndspChnReset(BGM_CHANNEL);
 
     ndspChnSetInterp(BGM_CHANNEL, NDSP_INTERP_LINEAR);
@@ -132,14 +170,10 @@ int AudioManager::getFreeSFXChannel() {
 }
 
 void AudioManager::playSFX(const Sound& s) {
-    if (!s.data || s.size == 0) {
-        return;
-    }
+    if (!s.data || s.size == 0) return;
 
     int idx = getFreeSFXChannel();
-    if (idx == -1) {
-        return;
-    }
+    if (idx == -1) return;
 
     int ch = SFX_START + idx;
 
@@ -157,4 +191,11 @@ void AudioManager::playSFX(const Sound& s) {
     DSP_FlushDataCache(s.data, s.size);
 
     ndspChnWaveBufAdd(ch, &sfxBufs[idx]);
+}
+
+void AudioManager::freeSound(Sound& s) {
+    if (s.data) {
+        linearFree(s.data);
+        s.data = nullptr;
+    }
 }
