@@ -7,6 +7,7 @@
 #include "states/FlagManager.hpp"
 #include "utils/Config.hpp"
 #include "AudioManager.hpp"
+#include "ResourceManager.hpp"
 
 // Iniciar RomFS para poder leer archivos de la SD
 bool romfsInit_Seguro() {
@@ -33,6 +34,7 @@ int main()
 
     // MANAGERS GLOBALES:
     FlagManager flagManager;
+    ResourceManager::get().init();
     //AudioManager::get().init();
 
     //Sound& bgm = AudioManager::get().getSound("romfs:/audio/tema.wav");
@@ -112,6 +114,7 @@ int main()
 
     // Limpieza
     delete manager;
+    ResourceManager::get().exit();
     //AudioManager::get().exit();
     romfsExit();
     cfguExit();

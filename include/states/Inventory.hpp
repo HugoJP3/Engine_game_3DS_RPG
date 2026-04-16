@@ -2,6 +2,7 @@
 #include <vector>
 #include <algorithm>
 #include <citro2d.h>
+#include "ResourceManager.hpp"
 
 struct Item {
     int ItemIndex;
@@ -15,12 +16,10 @@ class Inventory {
 
     public:
         Inventory(C3D_RenderTarget* target) : bottom(target) {
-            itemSheets = C2D_SpriteSheetLoad("romfs:/gfx/inventory.t3x");
+            itemSheets = ResourceManager::get().get("inventory");
         }
 
-        ~Inventory() {
-            C2D_SpriteSheetFree(itemSheets);
-        }
+        ~Inventory() {}
 
         // Añade un item al inventario
         void addItemIndex(int itIdx) {

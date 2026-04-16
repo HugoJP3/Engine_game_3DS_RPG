@@ -1,21 +1,19 @@
 #include "DialogueManager.hpp"
 
 DialogueManager::DialogueManager(FlagManager* flagManager) : flagManager(flagManager) {
-    ui_dialogue = C2D_SpriteSheetLoad("romfs:/gfx/dialogue.t3x");
-    
-    text_Buffer = C2D_TextBufNew(4096);
+    ui_dialogue = ResourceManager::get().get("dialogue");
+    text_Buffer   = C2D_TextBufNew(4096);
     nombre_Buffer = C2D_TextBufNew(4096);
-    debug_buff = C2D_TextBufNew(4096);
-
-    active = false;
+    debug_buff    = C2D_TextBufNew(4096);
 }
 
 DialogueManager::~DialogueManager() {
-    if (text_Buffer) C2D_TextBufDelete(text_Buffer);
+    if (text_Buffer)   C2D_TextBufDelete(text_Buffer);
     if (nombre_Buffer) C2D_TextBufDelete(nombre_Buffer);
-    if (debug_buff) C2D_TextBufDelete(debug_buff);
-    if (ui_dialogue) C2D_SpriteSheetFree(ui_dialogue);
+    if (debug_buff)    C2D_TextBufDelete(debug_buff);
+    // NO liberar ui_dialogue aquí
 }
+
 
 DialogueBranch DialogueManager::getNextBranch() {
     for (int i = allBranches.size() - 1; i >= 0; i--) {
@@ -285,7 +283,7 @@ void DialogueManager::draw() {
 
 void DialogueManager::debug(const std::string& s) {
     float tamTexto = 0.5f;
-    u32 col_texto = C2D_Color32(0, 0, 0, 255);
+    u32 col_texto = C2D_Color32(255, 255, 255, 255);
 
     // Usamos el buffer de la instancia
     C2D_TextBufClear(debug_buff);

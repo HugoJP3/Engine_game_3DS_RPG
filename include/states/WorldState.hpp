@@ -74,7 +74,7 @@ class WorldState : public State {
         void draw() override;
 
         Entity* getInteractableEntity(float maxDistance);
-        Teleport* checkTeleportCollision();
+        bool checkTeleportCollision(Teleport& outTp);
         bool checkLayerCollisions(TileMap* layer, float px, float py);
         CollisionType checkAllCollisions();
 

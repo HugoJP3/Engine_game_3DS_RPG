@@ -6,6 +6,7 @@
 #include <iostream>
 #include "utils/Config.hpp"
 #include "entities/Entity.hpp"
+#include "ResourceManager.hpp"
 
 struct DialogueChoice {
     std::string text; // Elección

@@ -1,5 +1,6 @@
 // Interfaz de estados
 #pragma once
+#include "ResourceManager.hpp"
 
 class SceneManager;
 

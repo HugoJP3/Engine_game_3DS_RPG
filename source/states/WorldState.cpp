@@ -1,7 +1,18 @@
 #include "states/WorldState.hpp"
 
-WorldState::WorldState(FlagManager* flagManager, C3D_RenderTarget* screen, std::string path, float startX, float startY)
-    : flagManager(flagManager), dialogueManager(flagManager), top(screen), mapPath(path), initialX(startX), initialY(startY) {}
+WorldState::WorldState(FlagManager* flagManager,
+    C3D_RenderTarget* screen, std::string path,
+    float startX, float startY)
+    : flagManager(flagManager),
+      dialogueManager(flagManager),
+      top(screen),
+      mapPath(path),
+      initialX(startX),
+      initialY(startY),
+      player(nullptr),
+      collisionLayer(nullptr),
+      camX(0.0f),
+      camY(0.0f) {}
 
 // GENERAR UN OBJETO
 void WorldState::spawnObject(std::string sheetName, int idx, float x, float y, float z, int width, int height, int itemIndex) {
@@ -209,6 +220,14 @@ void WorldState::loadObject(const std::string& path) {
 
 // CARGAR CARPETA (con TILESET y PERSONAJES/OBJETOS).
 void WorldState::loadLevelFolder(const std::string& folderPath) {
+    // Limpieza inicial
+    collisionLayer = nullptr;
+    teleports.clear();
+    layers.clear();
+    objetos.clear();
+    characters.clear();
+
+    
     std::map<std::string, Teleport> teleportInfo;
 
     DIR* dir = opendir(folderPath.c_str());
@@ -316,15 +335,16 @@ void WorldState::loadLevelFolder(const std::string& folderPath) {
 
 // CREACIÓN DEL MAPA:
 void WorldState::init() {
-    spriteSheets["hero"] = C2D_SpriteSheetLoad("romfs:/gfx/hero.t3x");
-    spriteSheets["basic_plants"] = C2D_SpriteSheetLoad("romfs:/gfx/basic_plants.t3x");
-    spriteSheets["tiles"] = C2D_SpriteSheetLoad("romfs:/gfx/tileset.t3x");
-    spriteSheets["other"] = C2D_SpriteSheetLoad("romfs:/gfx/tileset_other.t3x");
-    spriteSheets["ruinas"] = C2D_SpriteSheetLoad("romfs:/gfx/ruinas.t3x");
-    spriteSheets["efectos"] = C2D_SpriteSheetLoad("romfs:/gfx/efectos.t3x");
-    spriteSheets["furniture"] = C2D_SpriteSheetLoad("romfs:/gfx/furniture.t3x");
-    spriteSheets["characters"] = C2D_SpriteSheetLoad("romfs:/gfx/characters.t3x");
-    
+    spriteSheets["hero"]        = ResourceManager::get().get("hero");
+    spriteSheets["basic_plants"]= ResourceManager::get().get("basic_plants");
+    spriteSheets["tiles"]       = ResourceManager::get().get("tiles");
+    spriteSheets["other"]       = ResourceManager::get().get("other");
+    spriteSheets["ruinas"]      = ResourceManager::get().get("ruinas");
+    spriteSheets["efectos"]     = ResourceManager::get().get("efectos");
+    spriteSheets["furniture"]   = ResourceManager::get().get("furniture");
+    spriteSheets["characters"]  = ResourceManager::get().get("characters");
+
+
     player = new Hero(initialX, initialY, 0.4f, flagManager);
     player->setSpriteSheet(spriteSheets["hero"]);
     player->init();
@@ -355,16 +375,17 @@ bool WorldState::checkLayerCollisions(TileMap* layer, float px, float py) {
             layer->isSolidAt(right - 1.0f, bottom - 1.0f));
 }
 
-Teleport* WorldState::checkTeleportCollision() {
+bool WorldState::checkTeleportCollision(Teleport& outTp) {
     float px = player->getX();
     float py = player->getY();
 
     for (auto& tp : teleports) {
         if (checkLayerCollisions(tp.layer, px, py)) {
-            return &tp;
+            outTp = tp;
+            return true;
         }
     }
-    return nullptr;
+    return false;
 }
 
 CollisionType WorldState::checkAllCollisions() {
@@ -498,13 +519,13 @@ void WorldState::update(float dt, u32 kDown) {
     }
 
     // --- TP ---
-    Teleport* tp = checkTeleportCollision();
-    if (tp) {
+    Teleport tp;
+    if (checkTeleportCollision(tp)) {
         manager->changeState(new WorldState(
             flagManager, top,
-            tp->targetMap,
-            tp->spawnX * Config::TILE_SIZE,
-            tp->spawnY * Config::TILE_SIZE
+            tp.targetMap,
+            tp.spawnX * Config::TILE_SIZE,
+            tp.spawnY * Config::TILE_SIZE
         ));
         return;
     }
@@ -618,13 +639,9 @@ WorldState::~WorldState() {
     for (auto& tp : teleports) {
         delete tp.layer;
     }
+    teleports.clear();
 
     if (player) delete player;
 
-    for (auto& pair : spriteSheets) {
-        if (pair.second) {
-            C2D_SpriteSheetFree(pair.second);
-        }
-    }
     spriteSheets.clear();
 }
