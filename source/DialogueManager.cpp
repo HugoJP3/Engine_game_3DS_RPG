@@ -5,6 +5,7 @@ DialogueManager::DialogueManager(FlagManager* flagManager) : flagManager(flagMan
     
     text_Buffer = C2D_TextBufNew(4096);
     nombre_Buffer = C2D_TextBufNew(4096);
+    debug_buff = C2D_TextBufNew(4096);
 
     active = false;
 }
@@ -12,8 +13,8 @@ DialogueManager::DialogueManager(FlagManager* flagManager) : flagManager(flagMan
 DialogueManager::~DialogueManager() {
     if (text_Buffer) C2D_TextBufDelete(text_Buffer);
     if (nombre_Buffer) C2D_TextBufDelete(nombre_Buffer);
+    if (debug_buff) C2D_TextBufDelete(debug_buff);
     if (ui_dialogue) C2D_SpriteSheetFree(ui_dialogue);
-
 }
 
 DialogueBranch DialogueManager::getNextBranch() {
@@ -279,4 +280,20 @@ void DialogueManager::draw() {
                 1.0f, tamTexto, tamTexto, current_col);
         }
     }
+}
+
+
+void DialogueManager::debug(const std::string& s) {
+    float tamTexto = 0.5f;
+    u32 col_texto = C2D_Color32(0, 0, 0, 255);
+
+    // Usamos el buffer de la instancia
+    C2D_TextBufClear(debug_buff);
+
+    C2D_Text texto_mostrar;
+    C2D_TextParse(&texto_mostrar, debug_buff, s.c_str());
+    C2D_TextOptimize(&texto_mostrar);
+
+    // OJO: Aquí tenías "texto_nombre", debe ser "texto_mostrar"
+    C2D_DrawText(&texto_mostrar, C2D_WithColor, 10.0f, 10.0f, 1.0f, tamTexto, tamTexto, col_texto);   
 }

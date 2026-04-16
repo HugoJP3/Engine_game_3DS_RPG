@@ -38,7 +38,7 @@ class DialogueManager {
         size_t selectedChoice = 0;
         
         C2D_SpriteSheet ui_dialogue;        
-        C2D_TextBuf text_Buffer, nombre_Buffer;
+        C2D_TextBuf text_Buffer, nombre_Buffer, debug_buff;
 
         float animFrame = 0.0f; // vel caracteres
         float velWriting = 0.05f; // vel caracteres
@@ -61,4 +61,6 @@ class DialogueManager {
         void call_expression(Entity* ent, float camX, float camY);
         
         bool isActive() const { return active; }
+
+        void debug(const std::string& s); 
 };

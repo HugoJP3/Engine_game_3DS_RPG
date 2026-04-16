@@ -229,16 +229,6 @@ void WorldState::loadLevelFolder(const std::string& folderPath) {
                 if (key == "size") {
                     infoFile >> mapTilesWidth >> mapTilesHeight;
                 }
-                else if (key == "music") {
-                    AudioManager::get().stopBGM();
-
-                    std::string dirMusic;
-                    infoFile >> dirMusic;
-                    dirMusic = "romfs:/audio/" + dirMusic;
-
-                    Sound& music = AudioManager::get().getSound(dirMusic);
-                    AudioManager::get().playBGM(music, dirMusic);
-                }
                 else if (key == "tp") {
                     Teleport newTp;
                     std::string fileName;
@@ -487,8 +477,8 @@ void WorldState::update(float dt, u32 kDown) {
                 delete ent;
             }
         } else {
-            Sound& click = AudioManager::get().getSound("romfs:/audio/click.wav");
-            AudioManager::get().playSFX(click);
+            //Sound& click = AudioManager::get().getSound("romfs:/audio/click.wav");
+            //AudioManager::get().playSFX(click);
         }
     }
 
@@ -605,11 +595,18 @@ void WorldState::draw() {
             dialogueManager.call_expression(ent, camX, camY);
         }
     }
+
+    // DEBUG:
+    std::string debug = "\nLinear free: " + std::to_string(linearSpaceFree());
+    dialogueManager.debug(debug);
 }
 
 
 // ELIMINAR (LIBERAR RECURSOS)
-WorldState::~WorldState() {    
+WorldState::~WorldState() {
+    for(NPC* npc : characters) delete npc;
+    characters.clear();
+
     for(Object* obj : objetos) delete obj;
     objetos.clear();
 

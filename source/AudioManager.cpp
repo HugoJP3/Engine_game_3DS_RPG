@@ -48,10 +48,12 @@ Sound& AudioManager::getSound(const std::string& path) {
         // Liberar el más antiguo
         std::string oldest = lruOrder.front();
         if (oldest == currentBgmPath) {
-            lruOrder.pop_front();
+            // Nunca liberar la música global
+            lruOrder.remove(oldest);
             lruOrder.push_back(oldest);
             continue;
         }
+
 
         lruOrder.pop_front();
         freeSound(cache[oldest]);
@@ -75,6 +77,36 @@ void AudioManager::update() {
             ndspChnWaveBufClear(SFX_START + i);
         }
     }
+
+    // Liberar sonidos SFX que ya no están en uso
+    for (auto it = cache.begin(); it != cache.end(); ) {
+        const std::string& path = it->first;
+
+        // Nunca liberar la música global
+        if (path == currentBgmPath) {
+            ++it;
+            continue;
+        }
+
+        bool inUse = false;
+
+        // Revisar si algún canal está usando este sonido
+        for (int i = 0; i < SFX_CHANNELS; i++) {
+            if (sfxBufs[i].data_vaddr == it->second.data &&
+                sfxBufs[i].status == NDSP_WBUF_PLAYING) {
+                inUse = true;
+                break;
+            }
+        }
+
+        if (!inUse) {
+            freeSound(it->second);
+            it = cache.erase(it);
+        } else {
+            ++it;
+        }
+    }
+
 }
 
 Sound AudioManager::loadWav(const std::string& path) {

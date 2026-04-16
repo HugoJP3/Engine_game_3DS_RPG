@@ -33,7 +33,11 @@ int main()
 
     // MANAGERS GLOBALES:
     FlagManager flagManager;
-    AudioManager::get().init();
+    //AudioManager::get().init();
+
+    //Sound& bgm = AudioManager::get().getSound("romfs:/audio/tema.wav");
+    //AudioManager::get().playBGM(bgm, "romfs:/audio/tema.wav");
+
     
     // Inicio personaje:
     float initialX = 10 * Config::TILE_SIZE;
@@ -99,7 +103,7 @@ int main()
 
         // APLICACIÓN
         manager->update(dt, kDown);
-        AudioManager::get().update();
+        //AudioManager::get().update();
 
         C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
         manager->draw();
@@ -108,7 +112,7 @@ int main()
 
     // Limpieza
     delete manager;
-    AudioManager::get().exit();
+    //AudioManager::get().exit();
     romfsExit();
     cfguExit();
     C2D_Fini();
