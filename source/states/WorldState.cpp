@@ -1,5 +1,13 @@
 #include "states/WorldState.hpp"
 
+#define DBG(fmt, ...) do { \
+    char __buf[256]; \
+    snprintf(__buf, sizeof(__buf), fmt, ##__VA_ARGS__); \
+    dialogueManager.debug(__buf); \
+} while (0)
+
+#define DBG_MARK(tag) DBG("MARK: %s", tag)
+
 WorldState::WorldState(FlagManager* flagManager,
     C3D_RenderTarget* screen, std::string path,
     float startX, float startY)
@@ -212,9 +220,13 @@ void WorldState::loadObject(const std::string& path) {
         }
 
         // Spawnear objeto
+        size_t prevSize = objetos.size();
         spawnObject(sheetName, spriteIdx, x, y, z, width, height, itemIndex);
-        if (isSolid) objetos.back()->setSolid(true);
-        objetos.back()->setFlag(flag);
+        if (objetos.size() > prevSize) {
+            Object* obj = objetos.back();
+            if (isSolid) obj->setSolid(true);
+            obj->setFlag(flag);
+        }
     }
 }
 
@@ -226,6 +238,7 @@ void WorldState::loadLevelFolder(const std::string& folderPath) {
     layers.clear();
     objetos.clear();
     characters.clear();
+    allTileMaps.clear();
 
     
     std::map<std::string, Teleport> teleportInfo;
@@ -291,6 +304,7 @@ void WorldState::loadLevelFolder(const std::string& folderPath) {
                 layer->loadFromCSV(fullPath);
                 layer->setSolid(COLLISION);
                 collisionLayer = layer;
+                allTileMaps.push_back(layer);
             }
 
             // Teleports
@@ -300,10 +314,12 @@ void WorldState::loadLevelFolder(const std::string& folderPath) {
                 layer->setSolid(TP);
 
                 // Buscar configuración en info.txt
-                Teleport tp = teleportInfo[fileName];
-                tp.layer = layer;
-
-                teleports.push_back(tp);
+                if (teleportInfo.count(fileName)) {
+                    Teleport tp = teleportInfo[fileName];
+                    tp.layer = layer;
+                    teleports.push_back(tp);
+                    allTileMaps.push_back(layer);
+                }
             }
 
             // Capas normales
@@ -326,6 +342,7 @@ void WorldState::loadLevelFolder(const std::string& folderPath) {
                 TileMap* layer = new TileMap(sheet, z);
                 layer->loadFromCSV(fullPath);
                 layers.push_back(layer);
+                allTileMaps.push_back(layer);
             }
         }
     }
@@ -462,19 +479,30 @@ Entity* WorldState::getInteractableEntity(float maxDistance) {
 
 // ACTUALIZACIÓN (FRAME):
 void WorldState::update(float dt, u32 kDown) {
+    // ===================== DEBUG EXTENSO =====================
+    {
+        dialogueManager.clearDebug();
+    }
+
+    if (!player) {
+        DBG("ERROR: player NULL");
+        return;
+    }
     float oldX = player->getX();
     float oldY = player->getY();
 
     // --- Movimiento personajes/objetos ---
     for(NPC* npc : characters) {
+        if (!npc) { DBG("NPC NULL!"); continue; }
         npc->update(dt);
         npc->updateY(oldY);
     }
-
-    for(Object* obj : objetos) {
+    
+    for (Object* obj : objetos) {
+        if (!obj) { DBG("OBJ NULL!"); continue; }
         obj->update(dt);
     }
-
+    
     // --- Diálogos ---
     if (dialogueManager.isActive()) {
         dialogueManager.update(dt, kDown);
@@ -484,11 +512,11 @@ void WorldState::update(float dt, u32 kDown) {
     // -- Interacción ---
     if (kDown & KEY_A) {
         Entity* ent = getInteractableEntity(Config::INTERACTION_DISTANTE);
-
+    
         if (ent) {
             InteractionContext ctx;
             ctx.dialogueManager = &dialogueManager;
-            ctx.inventory = manager->getInventory();
+            ctx.inventory = manager ? manager->getInventory() : nullptr;
 
             ent->onInteract(ctx);
 
@@ -497,12 +525,9 @@ void WorldState::update(float dt, u32 kDown) {
                 if (it != objetos.end()) objetos.erase(it);
                 delete ent;
             }
-        } else {
-            //Sound& click = AudioManager::get().getSound("romfs:/audio/click.wav");
-            //AudioManager::get().playSFX(click);
         }
     }
-
+    
     // --- Movimiento personaje ---
     player->update(dt);
 
@@ -517,18 +542,29 @@ void WorldState::update(float dt, u32 kDown) {
     if (checkAllCollisions() == COLLISION) {
         player->setY(oldY);
     }
-
+    
     // --- TP ---
     Teleport tp;
     if (checkTeleportCollision(tp)) {
-        manager->changeState(new WorldState(
+        DBG("TP_HIT: layer=%p target=%s\nspawn=(%.1f,%.1f)",
+            tp.layer, tp.targetMap.c_str(), tp.spawnX, tp.spawnY);
+
+        DBG_MARK("TP_BEFORE_CHANGE_STATE");
+        WorldState* next = new WorldState(
             flagManager, top,
             tp.targetMap,
             tp.spawnX * Config::TILE_SIZE,
             tp.spawnY * Config::TILE_SIZE
-        ));
+        );
+
+        DBG("TP NEW WS=%p", next);
+
+        manager->changeState(next);
+
+        DBG("TP AFTER changeState (this=%p)", this);
         return;
     }
+
 
     // --- ACTUALIZAR CÁMARA ---
     const float screenW_world = 400.0f / Config::globalScale;
@@ -550,12 +586,12 @@ void WorldState::update(float dt, u32 kDown) {
 
     if (camX > mapaAncho - screenW_world) camX = mapaAncho - screenW_world;
     if (camY > mapaAlto - screenH_world) camY = mapaAlto - screenH_world;
-
-    //printf("\nCam: %f, %f\nX, Y: %f, %f\n", camX, camY, player->getX(), player->getY());
+    
 }
 
 // DIBUJAR:
 void WorldState::draw() {
+    DBG_MARK("DRAW_BEGIN");
     std::vector<RenderItem> renderList;
     for (TileMap* layer : layers) {
         renderList.push_back({
@@ -594,16 +630,23 @@ void WorldState::draw() {
             return a.zLayer < b.zLayer;
     });
 
+    DBG_MARK("DRAW_BEFORE_SCENEBEGIN");
     C2D_TargetClear(top, C2D_Color32(0, 0, 0, 255));
     C2D_SceneBegin(top);
 
     for (auto& item : renderList) {
         item.drawFunc();
     }
-    
+    DBG_MARK("DRAW_AFTER_RENDERLIST");
+
     if (Config::showColissions) {
+        DBG_MARK("DRAW_COLLISIONS");
         if (collisionLayer) collisionLayer->draw(camX, camY, player->getX());
         for (auto& tp : teleports) {
+            if (!tp.layer) {
+                DBG("WARN: TP layer NULL in draw");
+                continue;
+            }
             tp.layer->draw(camX, camY, player->getX());
         }
     }
@@ -617,9 +660,9 @@ void WorldState::draw() {
         }
     }
 
-    // DEBUG:
-    std::string debug = "\nLinear free: " + std::to_string(linearSpaceFree());
-    dialogueManager.debug(debug);
+    dialogueManager.drawDebug();
+
+    DBG_MARK("DRAW_END");
 }
 
 
@@ -631,15 +674,12 @@ WorldState::~WorldState() {
     for(Object* obj : objetos) delete obj;
     objetos.clear();
 
-    for(TileMap* layer : layers) delete layer;
+    for(TileMap* layer : allTileMaps) delete layer;
+    allTileMaps.clear();
+
     layers.clear();
-
-    if (collisionLayer) delete collisionLayer;
-
-    for (auto& tp : teleports) {
-        delete tp.layer;
-    }
     teleports.clear();
+    collisionLayer = nullptr;
 
     if (player) delete player;
 

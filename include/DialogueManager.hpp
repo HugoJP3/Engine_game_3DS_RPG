@@ -49,6 +49,8 @@ class DialogueManager {
 
         DialogueBranch getNextBranch();
 
+        std::string debugText;
+
     public:
         DialogueManager(FlagManager* flagManager);
         ~DialogueManager();
@@ -64,4 +66,7 @@ class DialogueManager {
         bool isActive() const { return active; }
 
         void debug(const std::string& s); 
+        void clearDebug() { debugText.clear(); }
+        const std::string& getDebugText() const { return debugText; }
+        void drawDebug();
 };

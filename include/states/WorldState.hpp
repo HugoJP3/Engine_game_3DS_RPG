@@ -52,9 +52,12 @@ class WorldState : public State {
         int mapTilesWidth, mapTilesHeight;
 
         Hero* player;
+
+        std::vector<TileMap*> allTileMaps;
         std::vector<Teleport> teleports; // Capa de teleports
         TileMap* collisionLayer = nullptr; // Capa de colisiones
         std::vector<TileMap*> layers; // Capas  de tiles
+        
         std::vector<Object*> objetos; // Capa de objetos
         std::vector<NPC*> characters; // Capa de NPCs
 
@@ -81,4 +84,5 @@ class WorldState : public State {
         C2D_SpriteSheet getSheet(std::string name) { return spriteSheets[name]; }
 
         DialogueManager& getDialogueManager() { return dialogueManager; }
+
 };

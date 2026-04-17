@@ -31,7 +31,11 @@ public:
     }
 
     C2D_SpriteSheet get(const std::string& name) {
-        return sheets[name];
+        auto it = sheets.find(name);
+        if (it == sheets.end()) {
+            return nullptr;
+        }
+        return it->second;
     }
 
 private:

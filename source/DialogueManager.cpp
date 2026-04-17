@@ -280,18 +280,22 @@ void DialogueManager::draw() {
     }
 }
 
-
 void DialogueManager::debug(const std::string& s) {
-    float tamTexto = 0.5f;
-    u32 col_texto = C2D_Color32(255, 255, 255, 255);
+    debugText += s;
+    debugText += "\n";
+}
 
-    // Usamos el buffer de la instancia
+void DialogueManager::drawDebug() {
+    if (debugText.empty()) return;
+
+    float tamTexto = 0.5f;
+    u32 col_texto = C2D_Color32(0, 0, 0, 255);
+
     C2D_TextBufClear(debug_buff);
 
     C2D_Text texto_mostrar;
-    C2D_TextParse(&texto_mostrar, debug_buff, s.c_str());
+    C2D_TextParse(&texto_mostrar, debug_buff, debugText.c_str());
     C2D_TextOptimize(&texto_mostrar);
 
-    // OJO: Aquí tenías "texto_nombre", debe ser "texto_mostrar"
-    C2D_DrawText(&texto_mostrar, C2D_WithColor, 10.0f, 10.0f, 1.0f, tamTexto, tamTexto, col_texto);   
+    C2D_DrawText(&texto_mostrar, C2D_WithColor, 10.0f, 10.0f, 1.0f, tamTexto, tamTexto, col_texto);
 }

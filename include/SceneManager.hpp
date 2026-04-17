@@ -38,7 +38,13 @@ class SceneManager {
                 if (fadeAlpha >= 255.0f) {
                     fadeAlpha = 255.0f;
 
-                    if (currentState) delete currentState;
+                    if (currentState) {
+                        delete currentState; 
+                        currentState = nullptr;
+                    }
+                    
+                    C3D_FrameEnd(0);
+
                     currentState = nextState;
                     nextState = nullptr;
 
