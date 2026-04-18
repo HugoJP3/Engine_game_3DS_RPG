@@ -7,6 +7,7 @@
 class SceneManager {
     private:
         static constexpr float FADE_SPEED = 280.0f;
+        enum FadePhase { FADE_IDLE, FADE_OUT, FADE_IN };
 
         C3D_RenderTarget* topTarget;
         State* currentState = nullptr;
@@ -18,7 +19,7 @@ class SceneManager {
         C3D_RenderTarget* bottomTarget;
         
         float fadeAlpha = 0.0f; // 0 = transparente, 255 = negro
-        bool isFading = false;
+        FadePhase fadePhase = FADE_IDLE;
     
     public:
         SceneManager(C3D_RenderTarget* top, C3D_RenderTarget* bottom) {
@@ -29,13 +30,13 @@ class SceneManager {
         }
 
         void changeState(State* newState) {
-            if (isFading) return;
+            if (fadePhase != FADE_IDLE) return;
             nextState = newState;
-            isFading = true;
+            fadePhase = FADE_OUT;
         }
 
         void update(float dt, u32 kDown) {
-            if (isFading) {
+            if (fadePhase == FADE_OUT) {
                 fadeAlpha += FADE_SPEED * dt;
                 if (fadeAlpha >= 255.0f) {
                     fadeAlpha = 255.0f;
@@ -52,14 +53,17 @@ class SceneManager {
                         currentState->setManager(this);
                         currentState->init();
                     }
-                    isFading = false;
+                    fadePhase = FADE_IN;
                 }
-                // Durante el fade-out no ejecutamos lógica del estado actual:
-                // evita teleports/interacciones repetidas mientras se hace swap.
                 return;
-            } else if (fadeAlpha > 0.0f) {
+            }
+
+            if (fadePhase == FADE_IN) {
                 fadeAlpha -= FADE_SPEED * dt;
-                if(fadeAlpha < 0.0f) fadeAlpha = 0.0f;
+                if (fadeAlpha <= 0.0f) {
+                    fadeAlpha = 0.0f;
+                    fadePhase = FADE_IDLE;
+                }
             }
 
             if (currentState) currentState->update(dt, kDown);
@@ -73,7 +77,7 @@ class SceneManager {
             if (fadeAlpha > 0.0f) {
                 C2D_SceneBegin(topTarget);
                 // z alto para tapar cualquier sprite/UI dibujado en z=1.0
-                C2D_DrawRectSolid(0, 0, 10.0f, 400, 240, C2D_Color32(0, 0, 0, (u8)fadeAlpha));
+                C2D_DrawRectSolid(0, 0, 1.0f, 400, 240, C2D_Color32(0, 0, 0, (u8)fadeAlpha));
             }
         }
 

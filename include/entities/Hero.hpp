@@ -27,4 +27,7 @@ class Hero : public Entity {
         
         void moveX(float dt);
         void moveY(float dt);
+
+        HeroDirection getDirection() const { return currentDir; }
+        void setDirection(HeroDirection dir) { currentDir = dir; }
 };

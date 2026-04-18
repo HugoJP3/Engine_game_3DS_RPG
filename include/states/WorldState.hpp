@@ -47,6 +47,7 @@ class WorldState : public State {
         
         std::string mapPath;
         float initialX, initialY;
+        HeroDirection initialDir = DIR_SIDE_RIGHT;
 
         std::map<std::string, C2D_SpriteSheet> spriteSheets;
         int mapTilesWidth, mapTilesHeight;
@@ -64,7 +65,7 @@ class WorldState : public State {
         float camX = 0, camY = 0;
 
     public:
-        WorldState(FlagManager* flagManager, C3D_RenderTarget* screen, std::string path, float startX, float startY);
+        WorldState(FlagManager* flagManager, C3D_RenderTarget* screen, std::string path, float startX, float startY, HeroDirection startDir = DIR_SIDE_RIGHT);
         ~WorldState();
 
         void spawnObject(std::string sheetName, int idx, float x, float y, float z, int width, int height, int itemIndex);

@@ -16,13 +16,14 @@ const char* SFX_INTERACT_PATH = "romfs:/audio/interact.wav";
 
 WorldState::WorldState(FlagManager* flagManager,
     C3D_RenderTarget* screen, std::string path,
-    float startX, float startY)
+    float startX, float startY, HeroDirection startDir)
     : flagManager(flagManager),
       dialogueManager(flagManager),
       top(screen),
       mapPath(path),
       initialX(startX),
       initialY(startY),
+      initialDir(startDir),
       player(nullptr),
       collisionLayer(nullptr),
       camX(0.0f),
@@ -393,6 +394,7 @@ void WorldState::init() {
     player = new Hero(initialX, initialY, 0.4f, flagManager);
     player->setSpriteSheet(spriteSheets["hero"]);
     player->init();
+    player->setDirection(initialDir);
 
     loadLevelFolder(mapPath);
     std::sort(layers.begin(), layers.end(), [](TileMap* a, TileMap* b) {
@@ -597,7 +599,8 @@ void WorldState::update(float dt, u32 kDown) {
             flagManager, top,
             tp.targetMap,
             tp.spawnX * Config::TILE_SIZE,
-            tp.spawnY * Config::TILE_SIZE
+            tp.spawnY * Config::TILE_SIZE,
+            player->getDirection()
         );
 
         //DBG("TP NEW WS=%p", next);
