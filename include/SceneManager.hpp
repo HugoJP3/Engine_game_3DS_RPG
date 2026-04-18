@@ -1,12 +1,15 @@
 // Estado actual y cambio de estados
 #pragma once
+#include <algorithm>
 #include "states/State.hpp"
 #include "states/FlagManager.hpp"
 #include "states/Inventory.hpp"
 
 class SceneManager {
     private:
-        static constexpr float FADE_SPEED = 280.0f;
+        static constexpr float FADE_SPEED = 200.0f;
+        // Evita saltos enormes de alpha si un frame tarda mucho (fade-in “invisible”).
+        static constexpr float FADE_DT_CAP = 1.0f / 30.0f;
         enum FadePhase { FADE_IDLE, FADE_OUT, FADE_IN };
 
         C3D_RenderTarget* topTarget;
@@ -36,8 +39,10 @@ class SceneManager {
         }
 
         void update(float dt, u32 kDown) {
+            const float fadeDt = std::min(dt, FADE_DT_CAP);
+
             if (fadePhase == FADE_OUT) {
-                fadeAlpha += FADE_SPEED * dt;
+                fadeAlpha += FADE_SPEED * fadeDt;
                 if (fadeAlpha >= 255.0f) {
                     fadeAlpha = 255.0f;
 
@@ -59,7 +64,7 @@ class SceneManager {
             }
 
             if (fadePhase == FADE_IN) {
-                fadeAlpha -= FADE_SPEED * dt;
+                fadeAlpha -= FADE_SPEED * fadeDt;
                 if (fadeAlpha <= 0.0f) {
                     fadeAlpha = 0.0f;
                     fadePhase = FADE_IDLE;
@@ -72,13 +77,14 @@ class SceneManager {
         void draw() {
             if (currentState) currentState->draw();
 
-            inventario->draw();
-
+            // Fade en la misma escena 2D del estado (WorldState deja top activo).
+            // Un segundo C2D_SceneBegin(top) aquí puede vaciar/reiniciar la escena y romper el fade-in.
             if (fadeAlpha > 0.0f) {
-                C2D_SceneBegin(topTarget);
-                // z alto para tapar cualquier sprite/UI dibujado en z=1.0
-                C2D_DrawRectSolid(0, 0, 1.0f, 400, 240, C2D_Color32(0, 0, 0, (u8)fadeAlpha));
+                const u8 a = (u8)std::min(255.0f, fadeAlpha);
+                C2D_DrawRectSolid(0, 0, 1.0f, 400, 240, C2D_Color32(0, 0, 0, a));
             }
+
+            inventario->draw();
         }
 
         ~SceneManager() {
