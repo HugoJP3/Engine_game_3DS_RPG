@@ -83,35 +83,9 @@ void AudioManager::update() {
         }
     }
 
-    // Liberar sonidos SFX que ya no están en uso
-    for (auto it = cache.begin(); it != cache.end(); ) {
-        const std::string& path = it->first;
-
-        // Nunca liberar la música global
-        if (path == currentBgmPath) {
-            ++it;
-            continue;
-        }
-
-        bool inUse = false;
-
-        // Revisar si algún canal está usando este sonido
-        for (int i = 0; i < SFX_CHANNELS; i++) {
-            if (sfxBufs[i].data_vaddr == it->second.data &&
-                sfxBufs[i].status == NDSP_WBUF_PLAYING) {
-                inUse = true;
-                break;
-            }
-        }
-
-        if (!inUse) {
-            freeSound(it->second);
-            it = cache.erase(it);
-        } else {
-            ++it;
-        }
-    }
-
+    // No borrar entradas de `cache` aquí: comparten linear heap con citro2d y
+    // liberar PCM justo al terminar el SFX puede corromper el heap y romper
+    // textos/UI (p. ej. diálogo). La presión de memoria la gestiona el LRU en getSound().
 }
 
 Sound AudioManager::loadWav(const std::string& path) {
@@ -207,8 +181,9 @@ int AudioManager::getFreeSFXChannel() {
     return -1;
 }
 
-void AudioManager::playSFX(const Sound& s) {
+void AudioManager::playSFX(const Sound& s, float rateMul) {
     if (!s.data || s.size == 0) return;
+    if (rateMul <= 0.0f) rateMul = 1.0f;
 
     int idx = getFreeSFXChannel();
     if (idx == -1) return;
@@ -218,7 +193,7 @@ void AudioManager::playSFX(const Sound& s) {
     ndspChnReset(ch);
 
     ndspChnSetInterp(ch, NDSP_INTERP_LINEAR);
-    ndspChnSetRate(ch, s.sampleRate);
+    ndspChnSetRate(ch, s.sampleRate * rateMul);
     ndspChnSetFormat(ch,
         s.stereo ? NDSP_FORMAT_STEREO_PCM16 : NDSP_FORMAT_MONO_PCM16);
 

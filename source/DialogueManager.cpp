@@ -1,4 +1,23 @@
 #include "DialogueManager.hpp"
+#include "AudioManager.hpp"
+#include <cstdio>
+#include <cctype>
+#include <cstdint>
+
+namespace {
+
+constexpr float VOICE_BLIP_MIN_INTERVAL = 0.036f;
+
+int voiceFileIndexFromName(const std::string& name) {
+    uint32_t h = 2166136261u;
+    for (unsigned char c : name) {
+        h ^= c;
+        h *= 16777619u;
+    }
+    return (int)(h % 10) + 1;
+}
+
+} // namespace
 
 DialogueManager::DialogueManager(FlagManager* flagManager) : flagManager(flagManager) {
     ui_dialogue = ResourceManager::get().get("dialogue");
@@ -52,11 +71,43 @@ void DialogueManager::startDialogue(const std::vector<DialogueBranch>& branches,
     selectedChoice = 0;
 
     active = true;
+    voiceCooldown = 0.0f;
 }
 
+void DialogueManager::maybePlayVoiceBlip(const std::string& line, size_t byteStart) {
+    if (voiceCooldown > 0.0f || byteStart >= line.size()) return;
+
+    unsigned char c = (unsigned char)line[byteStart];
+    if (c <= ' ') return;
+    if (c < 128 && std::ispunct(static_cast<int>(c))) return;
+
+    int vid = voiceFileIndexFromName(character_name);
+    char pathBuf[64];
+    std::snprintf(pathBuf, sizeof(pathBuf), "romfs:/audio/voices/Voice%d.wav", vid);
+
+    Sound& snd = AudioManager::get().getSound(pathBuf);
+    if (!snd.data || snd.size == 0) return;
+
+    uint32_t h = 2166136261u;
+    for (unsigned char ch : line) {
+        h ^= ch;
+        h *= 16777619u;
+    }
+    h ^= (uint32_t)byteStart * 0x9E3779B9u;
+    h ^= (uint32_t)character_name.size() * 2654435761u;
+    float rateMul = 0.88f + (float)(h % 25u) * 0.01f;
+
+    AudioManager::get().playSFX(snd, rateMul);
+    voiceCooldown = VOICE_BLIP_MIN_INTERVAL;
+}
 
 void DialogueManager::update(float dt, u32 kDown) {
     if (!active) return;
+
+    if (voiceCooldown > 0.0f) {
+        voiceCooldown -= dt;
+        if (voiceCooldown < 0.0f) voiceCooldown = 0.0f;
+    }
 
     // --- Lógica de elección múltiple ---
     if (inChoiceMode) {
@@ -107,7 +158,9 @@ void DialogueManager::update(float dt, u32 kDown) {
         
         // Avanzar frase solo si no hemos llegado al final de esta
         if (charIdx < currentBranch.lines[currentLineIdx].length()) {
-            unsigned char c = (unsigned char)currentBranch.lines[currentLineIdx][charIdx];
+            const std::string& line = currentBranch.lines[currentLineIdx];
+            size_t byteStart = charIdx;
+            unsigned char c = (unsigned char)line[charIdx];
             size_t res = 1;
 
             // Detectar cuántos bytes ocupa el carácter actual
@@ -119,9 +172,11 @@ void DialogueManager::update(float dt, u32 kDown) {
             charIdx += res;
 
             // Seguridad: No pasarnos del final por si el archivo está mal formado
-            if (charIdx > currentBranch.lines[currentLineIdx].length()) {
-                charIdx = currentBranch.lines[currentLineIdx].length();
+            if (charIdx > line.length()) {
+                charIdx = line.length();
             }
+
+            maybePlayVoiceBlip(line, byteStart);
         }
     }
 

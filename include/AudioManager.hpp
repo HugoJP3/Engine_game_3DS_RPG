@@ -27,7 +27,7 @@ public:
     void stopBGM();
     const std::string& getCurrentBGMPath() const { return currentBgmPath; }
 
-    void playSFX(const Sound& sound);
+    void playSFX(const Sound& sound, float rateMul = 1.0f);
 
 private:
     AudioManager() = default;

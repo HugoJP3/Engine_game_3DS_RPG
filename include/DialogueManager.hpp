@@ -51,6 +51,9 @@ class DialogueManager {
 
         std::string debugText;
 
+        float voiceCooldown = 0.0f;
+        void maybePlayVoiceBlip(const std::string& line, size_t byteStart);
+
     public:
         DialogueManager(FlagManager* flagManager);
         ~DialogueManager();
