@@ -1,0 +1,62 @@
+npc Lucía Navarro
+position 25 6
+size 34 25
+sprite characters 1 0
+tone 7
+
+branch
+    when none
+    say
+        Hola puta!
+        Miau.
+    end
+end
+
+branch
+    when LN_state1 false
+    say
+        Hola puta!
+        He perdido a mis alumnos.\n¿Los has visto?
+    end
+
+    choice Fuas, qué liada.
+        set LN_state1 true
+    end
+
+    choice Acho, ¿y el problema?
+        set LN_state2 true
+    end
+end
+
+branch
+    when LN_state1 true
+    say
+        Ya...\nEstoy un poco rayada...\nAhora en un rato los busco mejor...
+        ...O mejor puedo ir a darme un bañito\nJEJEJEJEJE
+        JEJEJEJEJE\nJEJEJEJEJE
+    end
+    set
+        LN_generic true
+    end
+end
+
+branch
+    when LN_state2 true
+    say
+        Quizás tengas razón.\nAhora en un rato los busco mejor...
+        ...O mejor puedo ir a darme un bañito\nJEJEJEJEJE
+        JEJEJEJEJE\nJEJEJEJEJE
+    end
+    set
+        LN_generic true
+    end
+end
+
+branch
+    when LN_generic true
+    say
+        Los niños siempre vuelven, ¿no?
+        Me merezco un baño...
+        JEJEJEJEJE
+    end
+end

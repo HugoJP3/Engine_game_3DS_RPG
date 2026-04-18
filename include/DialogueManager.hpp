@@ -52,13 +52,18 @@ class DialogueManager {
         std::string debugText;
 
         float voiceCooldown = 0.0f;
+        int voiceTone = -1;
         void maybePlayVoiceBlip(const std::string& line, size_t byteStart);
 
     public:
+        // Índice máximo válido para tone en .npc (0…MAX = grave→agudo)
+        // -1 = sin tono fijo (solo variación por nombre)
+        static constexpr int VOICE_TONE_INDEX_MAX = 9;
+
         DialogueManager(FlagManager* flagManager);
         ~DialogueManager();
 
-        void startDialogue(const std::vector<DialogueBranch>& branches, std::string name);
+        void startDialogue(const std::vector<DialogueBranch>& branches, std::string name, int tone = -1);
         void update(float dt, u32 kDown);
 
         void draw();

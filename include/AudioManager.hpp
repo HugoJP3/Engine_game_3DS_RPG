@@ -28,6 +28,8 @@ public:
     const std::string& getCurrentBGMPath() const { return currentBgmPath; }
 
     void playSFX(const Sound& sound, float rateMul = 1.0f);
+    /** Canal fijo (no compartido con el balbuceo); no se pierde si los demás SFX están ocupados. */
+    void playUISFX(const Sound& sound, float rateMul = 1.0f);
 
 private:
     AudioManager() = default;
@@ -38,6 +40,8 @@ private:
     static const int BGM_CHANNEL = 0;
     static const int SFX_START = 1;
     static const int SFX_CHANNELS = 7;
+    /** Índice en sfxBufs / canal ndsp reservado solo para menús, choices, clicks. */
+    static const int SFX_UI_CHANNEL_INDEX = 6;
 
     std::string currentBgmPath;
 

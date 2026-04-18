@@ -7,6 +7,23 @@
 namespace {
 
 constexpr float VOICE_BLIP_MIN_INTERVAL = 0.036f;
+constexpr const char* SFX_CHOICE_CONFIRM_PATH = "romfs:/audio/interact.wav";
+constexpr const char* SFX_CHOICE_NAV_PATH = "romfs:/audio/interact.wav";
+// tone 0 … VOICE_TONE_INDEX_MAX: pitch de grave → agudo (sobre la variación por carácter)
+constexpr float TONE_PITCH_MUL_MIN = 0.76f;
+constexpr float TONE_PITCH_MUL_MAX = 1.24f;
+
+int clampToneIndex(int tone) {
+    if (tone < 0) return -1;
+    if (tone > DialogueManager::VOICE_TONE_INDEX_MAX) return DialogueManager::VOICE_TONE_INDEX_MAX;
+    return tone;
+}
+
+float tonePitchMul(int toneIdx) {
+    if (toneIdx < 0) return 1.0f;
+    const float t = (float)toneIdx / (float)DialogueManager::VOICE_TONE_INDEX_MAX;
+    return TONE_PITCH_MUL_MIN + t * (TONE_PITCH_MUL_MAX - TONE_PITCH_MUL_MIN);
+}
 
 int voiceFileIndexFromName(const std::string& name) {
     uint32_t h = 2166136261u;
@@ -55,13 +72,14 @@ DialogueBranch DialogueManager::getNextBranch() {
     return allBranches[0];
 }
 
-void DialogueManager::startDialogue(const std::vector<DialogueBranch>& branches, std::string name) {
+void DialogueManager::startDialogue(const std::vector<DialogueBranch>& branches, std::string name, int tone) {
     allBranches = branches;
     DialogueBranch dialogueBranch = getNextBranch();
     if (dialogueBranch.lines.empty()) return;
     if (name.empty()) return;
 
     character_name = name;
+    voiceTone = clampToneIndex(tone);
     currentBranch = dialogueBranch;
 
     currentLineIdx = 0;
@@ -96,6 +114,9 @@ void DialogueManager::maybePlayVoiceBlip(const std::string& line, size_t byteSta
     h ^= (uint32_t)byteStart * 0x9E3779B9u;
     h ^= (uint32_t)character_name.size() * 2654435761u;
     float rateMul = 0.88f + (float)(h % 25u) * 0.01f;
+    if (voiceTone >= 0) {
+        rateMul *= tonePitchMul(voiceTone);
+    }
 
     AudioManager::get().playSFX(snd, rateMul);
     voiceCooldown = VOICE_BLIP_MIN_INTERVAL;
@@ -117,6 +138,8 @@ void DialogueManager::update(float dt, u32 kDown) {
             if (!currentBranch.choices.empty()) {
                 if (selectedChoice == 0) selectedChoice = currentBranch.choices.size() - 1;
                 else selectedChoice--;
+                Sound& nav = AudioManager::get().getSound(SFX_CHOICE_NAV_PATH);
+                AudioManager::get().playUISFX(nav);
             }
         }
 
@@ -124,6 +147,8 @@ void DialogueManager::update(float dt, u32 kDown) {
             if (!currentBranch.choices.empty()) {
                 selectedChoice++;
                 if (selectedChoice >= currentBranch.choices.size()) selectedChoice = 0;
+                Sound& nav = AudioManager::get().getSound(SFX_CHOICE_NAV_PATH);
+                AudioManager::get().playUISFX(nav);
             }
         }
 
@@ -133,6 +158,9 @@ void DialogueManager::update(float dt, u32 kDown) {
                 active = false;
                 return;
             }
+
+            Sound& confirm = AudioManager::get().getSound(SFX_CHOICE_CONFIRM_PATH);
+            AudioManager::get().playUISFX(confirm);
 
             // aplicar flags de la opción
             for (auto& f : currentBranch.choices[selectedChoice].flagsOnSelect) {
@@ -144,7 +172,7 @@ void DialogueManager::update(float dt, u32 kDown) {
             // recalcular branch
             DialogueBranch next = getNextBranch();
             currentBranch = next;
-            currentLineIdx = 0,
+            currentLineIdx = 0;
             charIdx = 0;
         }
 

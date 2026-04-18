@@ -173,7 +173,8 @@ void AudioManager::stopBGM() {
 }
 
 int AudioManager::getFreeSFXChannel() {
-    for (int i = 0; i < SFX_CHANNELS; i++) {
+    // Deja libre el último canal para playUISFX (balbuceo no lo usa).
+    for (int i = 0; i < SFX_UI_CHANNEL_INDEX; i++) {
         if (sfxBufs[i].status != NDSP_WBUF_PLAYING) {
             return i;
         }
@@ -189,6 +190,29 @@ void AudioManager::playSFX(const Sound& s, float rateMul) {
     if (idx == -1) return;
 
     int ch = SFX_START + idx;
+
+    ndspChnReset(ch);
+
+    ndspChnSetInterp(ch, NDSP_INTERP_LINEAR);
+    ndspChnSetRate(ch, s.sampleRate * rateMul);
+    ndspChnSetFormat(ch,
+        s.stereo ? NDSP_FORMAT_STEREO_PCM16 : NDSP_FORMAT_MONO_PCM16);
+
+    memset(&sfxBufs[idx], 0, sizeof(ndspWaveBuf));
+    sfxBufs[idx].data_vaddr = s.data;
+    sfxBufs[idx].nsamples = s.nsamples;
+
+    DSP_FlushDataCache(s.data, s.size);
+
+    ndspChnWaveBufAdd(ch, &sfxBufs[idx]);
+}
+
+void AudioManager::playUISFX(const Sound& s, float rateMul) {
+    if (!s.data || s.size == 0) return;
+    if (rateMul <= 0.0f) rateMul = 1.0f;
+
+    const int idx = SFX_UI_CHANNEL_INDEX;
+    const int ch = SFX_START + idx;
 
     ndspChnReset(ch);
 

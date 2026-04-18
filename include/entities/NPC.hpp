@@ -16,6 +16,8 @@ class NPC : public Entity {
 
         Expression currentMood = CHAT;
 
+        int voiceTone = -1;
+
     public:
         NPC(float x, float y, int width, int height, int colW, int colH, std::string name, FlagManager* flagManager, int animate, int spriteIdx)
             : Entity(x, y, 0.35,
@@ -52,6 +54,12 @@ class NPC : public Entity {
         }
         
         std::string getNombre() const { return nombre; }
+
+        void setVoiceTone(int t) {
+            if (t < 0) voiceTone = -1;
+            else if (t > DialogueManager::VOICE_TONE_INDEX_MAX) voiceTone = DialogueManager::VOICE_TONE_INDEX_MAX;
+            else voiceTone = t;
+        }
 
         void updateY(float yPlayer) {
             // Variar altura con la del personaje (Z dibujado)
@@ -90,7 +98,8 @@ class NPC : public Entity {
             if (ctx.dialogueManager) {
                 ctx.dialogueManager->startDialogue(
                     this->branches,
-                    this->getName()
+                    this->getName(),
+                    voiceTone
                 );
             }
         }

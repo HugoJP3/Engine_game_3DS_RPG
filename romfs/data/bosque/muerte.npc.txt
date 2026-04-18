@@ -2,6 +2,7 @@ npc Antonio
 position 20 15
 size 37 31
 sprite characters 0 0
+tone 9
 
 branch
     when none
