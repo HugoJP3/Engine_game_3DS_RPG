@@ -25,6 +25,7 @@ public:
 
     void playBGM(const Sound& sound, const std::string& path);
     void stopBGM();
+    const std::string& getCurrentBGMPath() const { return currentBgmPath; }
 
     void playSFX(const Sound& sound);
 

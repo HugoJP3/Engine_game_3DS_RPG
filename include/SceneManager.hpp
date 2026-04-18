@@ -6,6 +6,8 @@
 
 class SceneManager {
     private:
+        static constexpr float FADE_SPEED = 280.0f;
+
         C3D_RenderTarget* topTarget;
         State* currentState = nullptr;
         State* nextState = nullptr;
@@ -34,7 +36,7 @@ class SceneManager {
 
         void update(float dt, u32 kDown) {
             if (isFading) {
-                fadeAlpha += 500.0f * dt;
+                fadeAlpha += FADE_SPEED * dt;
                 if (fadeAlpha >= 255.0f) {
                     fadeAlpha = 255.0f;
 
@@ -56,7 +58,7 @@ class SceneManager {
                 // evita teleports/interacciones repetidas mientras se hace swap.
                 return;
             } else if (fadeAlpha > 0.0f) {
-                fadeAlpha -= 500.0f * dt;
+                fadeAlpha -= FADE_SPEED * dt;
                 if(fadeAlpha < 0.0f) fadeAlpha = 0.0f;
             }
 
@@ -70,7 +72,8 @@ class SceneManager {
 
             if (fadeAlpha > 0.0f) {
                 C2D_SceneBegin(topTarget);
-                C2D_DrawRectSolid(0, 0, 0.9f, 400, 240, C2D_Color32(0, 0, 0, (u8)fadeAlpha));
+                // z alto para tapar cualquier sprite/UI dibujado en z=1.0
+                C2D_DrawRectSolid(0, 0, 10.0f, 400, 240, C2D_Color32(0, 0, 0, (u8)fadeAlpha));
             }
         }
 

@@ -48,7 +48,12 @@ Sound& AudioManager::getSound(const std::string& path) {
         // Liberar el más antiguo
         std::string oldest = lruOrder.front();
         if (oldest == currentBgmPath) {
-            // Nunca liberar la música global
+            // Nunca liberar la música global. Si es el único elemento,
+            // no hay forma de recuperar memoria: devolvemos vacío para evitar freeze.
+            if (lruOrder.size() == 1) {
+                static Sound empty;
+                return empty;
+            }
             lruOrder.remove(oldest);
             lruOrder.push_back(oldest);
             continue;
@@ -190,6 +195,7 @@ void AudioManager::playBGM(const Sound& s, const std::string& path) {
 
 void AudioManager::stopBGM() {
     ndspChnReset(BGM_CHANNEL);
+    currentBgmPath.clear();
 }
 
 int AudioManager::getFreeSFXChannel() {

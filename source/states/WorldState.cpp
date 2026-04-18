@@ -1,4 +1,10 @@
 #include "states/WorldState.hpp"
+#include "AudioManager.hpp"
+
+namespace {
+const char* SFX_CLICK_PATH = "romfs:/audio/click.wav";
+const char* SFX_INTERACT_PATH = "romfs:/audio/interact.wav";
+}
 
 #define DBG(fmt, ...) do { \
     char __buf[256]; \
@@ -242,6 +248,7 @@ void WorldState::loadLevelFolder(const std::string& folderPath) {
 
     
     std::map<std::string, Teleport> teleportInfo;
+    std::string bgmPath;
 
     DIR* dir = opendir(folderPath.c_str());
     if (!dir) return;
@@ -260,6 +267,17 @@ void WorldState::loadLevelFolder(const std::string& folderPath) {
             while (infoFile >> key) {
                 if (key == "size") {
                     infoFile >> mapTilesWidth >> mapTilesHeight;
+                }
+                else if (key == "music") {
+                    std::string musicFile;
+                    infoFile >> musicFile;
+                    if (!musicFile.empty()) {
+                        if (musicFile.find("romfs:/") == 0) {
+                            bgmPath = musicFile;
+                        } else {
+                            bgmPath = "romfs:/audio/" + musicFile;
+                        }
+                    }
                 }
                 else if (key == "tp") {
                     Teleport newTp;
@@ -348,6 +366,16 @@ void WorldState::loadLevelFolder(const std::string& folderPath) {
     }
 
     closedir(dir);
+
+    if (!bgmPath.empty()) {
+        AudioManager& audio = AudioManager::get();
+        if (audio.getCurrentBGMPath() != bgmPath) {
+            // Desproteger el BGM previo para que getSound pueda liberar memoria si hace falta.
+            audio.stopBGM();
+            Sound& bgm = audio.getSound(bgmPath);
+            audio.playBGM(bgm, bgmPath);
+        }
+    }
 }
 
 // CREACIÓN DEL MAPA:
@@ -514,6 +542,9 @@ void WorldState::update(float dt, u32 kDown) {
         Entity* ent = getInteractableEntity(Config::INTERACTION_DISTANTE);
     
         if (ent) {
+            Sound& sfxInteract = AudioManager::get().getSound(SFX_INTERACT_PATH);
+            AudioManager::get().playSFX(sfxInteract);
+
             InteractionContext ctx;
             ctx.dialogueManager = &dialogueManager;
             ctx.inventory = manager ? manager->getInventory() : nullptr;
@@ -534,6 +565,9 @@ void WorldState::update(float dt, u32 kDown) {
                 }
                 delete ent;
             }
+        } else {
+            Sound& sfxClick = AudioManager::get().getSound(SFX_CLICK_PATH);
+            AudioManager::get().playSFX(sfxClick);
         }
     }
     
@@ -555,10 +589,10 @@ void WorldState::update(float dt, u32 kDown) {
     // --- TP ---
     Teleport tp;
     if (checkTeleportCollision(tp)) {
-        DBG("TP_HIT: layer=%p target=%s\nspawn=(%.1f,%.1f)",
-            tp.layer, tp.targetMap.c_str(), tp.spawnX, tp.spawnY);
+        //DBG("TP_HIT: layer=%p target=%s\nspawn=(%.1f,%.1f)",
+        //    tp.layer, tp.targetMap.c_str(), tp.spawnX, tp.spawnY);
 
-        DBG_MARK("TP_BEFORE_CHANGE_STATE");
+        //DBG_MARK("TP_BEFORE_CHANGE_STATE");
         WorldState* next = new WorldState(
             flagManager, top,
             tp.targetMap,
@@ -566,11 +600,11 @@ void WorldState::update(float dt, u32 kDown) {
             tp.spawnY * Config::TILE_SIZE
         );
 
-        DBG("TP NEW WS=%p", next);
+        //DBG("TP NEW WS=%p", next);
 
         manager->changeState(next);
 
-        DBG("TP AFTER changeState (this=%p)", this);
+        //DBG("TP AFTER changeState (this=%p)", this);
         return;
     }
 
@@ -600,7 +634,7 @@ void WorldState::update(float dt, u32 kDown) {
 
 // DIBUJAR:
 void WorldState::draw() {
-    DBG_MARK("DRAW_BEGIN");
+    //DBG_MARK("DRAW_BEGIN");
     std::vector<RenderItem> renderList;
     for (TileMap* layer : layers) {
         renderList.push_back({
@@ -639,17 +673,17 @@ void WorldState::draw() {
             return a.zLayer < b.zLayer;
     });
 
-    DBG_MARK("DRAW_BEFORE_SCENEBEGIN");
+    //DBG_MARK("DRAW_BEFORE_SCENEBEGIN");
     C2D_TargetClear(top, C2D_Color32(0, 0, 0, 255));
     C2D_SceneBegin(top);
 
     for (auto& item : renderList) {
         item.drawFunc();
     }
-    DBG_MARK("DRAW_AFTER_RENDERLIST");
+    //DBG_MARK("DRAW_AFTER_RENDERLIST");
 
     if (Config::showColissions) {
-        DBG_MARK("DRAW_COLLISIONS");
+        //DBG_MARK("DRAW_COLLISIONS");
         if (collisionLayer) collisionLayer->draw(camX, camY, player->getX());
         for (auto& tp : teleports) {
             if (!tp.layer) {
@@ -660,17 +694,17 @@ void WorldState::draw() {
         }
     }
 
-    DBG_MARK("DRAW_BEFORE_DIALOGUE");
+    //DBG_MARK("DRAW_BEFORE_DIALOGUE");
     dialogueManager.draw();
-    DBG_MARK("DRAW_AFTER_DIALOGUE");
+    //DBG_MARK("DRAW_AFTER_DIALOGUE");
 
     if(!dialogueManager.isActive()) {
-        DBG_MARK("DRAW_BEFORE_INTERACTABLE");
+        //DBG_MARK("DRAW_BEFORE_INTERACTABLE");
         Entity* ent = getInteractableEntity(Config::INTERACTION_DISTANTE);
         if (ent) {
             dialogueManager.call_expression(ent, camX, camY);
         }
-        DBG_MARK("DRAW_AFTER_INTERACTABLE");
+        //DBG_MARK("DRAW_AFTER_INTERACTABLE");
     }
 
     dialogueManager.drawDebug();
