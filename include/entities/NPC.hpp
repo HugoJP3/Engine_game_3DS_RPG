@@ -9,8 +9,10 @@ class NPC : public Entity {
         std::string npcID;
         int baseIndex; // base de animación
         std::string nombre;
+
         int animate = 0; // se anima o es estático
         int spriteIdx; // índice en sprite sheet
+        float velAnimation = 0.15f; // velocidad animación
 
         float animTimer = 0.0f; // 0-0.15f
 
@@ -69,12 +71,11 @@ class NPC : public Entity {
 
         void update(float dt) override {
             // Animación
-            if (animate) {
+            if (animate > 1) {
                 animTimer += dt;
                 if (animTimer >= 0.15f) {
                     animTimer = 0.0f;
                     baseIndex = (baseIndex + 1) % animate;
-                    if (baseIndex == 0) baseIndex = 1; 
                 }
             }
         }
@@ -108,4 +109,5 @@ class NPC : public Entity {
         void setName(const std::string& n) { nombre = n; }
 
         void setPosition(float x, float y) { setX(x); setY(y); }
+        void setVel(float vel) { velAnimation = vel; }
 };

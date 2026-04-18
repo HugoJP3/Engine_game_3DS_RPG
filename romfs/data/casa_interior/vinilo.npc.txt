@@ -1,0 +1,14 @@
+npc Toca discos
+position 12 14
+size 32 16
+sprite hero 1 3 0.20
+mood CHAT
+tone 5
+
+branch
+    when none
+    say
+        Hugo se ha dejado un vinilo puesto...\n..."Dark Side of The Moon"
+        ¿Dónde está Hugo?
+    end
+end

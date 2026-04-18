@@ -55,6 +55,7 @@ void WorldState::loadNPC(const std::string& path) {
     float x = 0, y = 0; // default
     float npcWidth = 0.0f, npcHeight = 0.0f;
     int spriteIdx, animate = 0;
+    float vel = 0.15f;
     int npcTone = -1;
 
     enum Parser_STATE { NONE, IN_BRANCH, IN_SAY, IN_SET, IN_CHOICE };
@@ -86,7 +87,10 @@ void WorldState::loadNPC(const std::string& path) {
             ss >> npcWidth >> npcHeight;
         }
         else if (word == "sprite") {
-            ss >> spriteName >> spriteIdx >> animate;
+            ss >> spriteName >> spriteIdx;
+
+            if (ss.peek() != EOF) ss >> animate;
+            if (ss.peek() != EOF) ss >> vel;
         }
         else if (word == "tone") {
             ss >> npcTone;
@@ -204,6 +208,8 @@ void WorldState::loadNPC(const std::string& path) {
     if (spriteSheets.count(spriteName)) {
         npc->setSpriteSheet(spriteSheets[spriteName]);
     }
+
+    npc->setVel(vel);
 
     characters.push_back(npc);
 }
