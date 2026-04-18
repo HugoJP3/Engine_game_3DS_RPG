@@ -521,8 +521,17 @@ void WorldState::update(float dt, u32 kDown) {
             ent->onInteract(ctx);
 
             if (ent->isPendingRemoval()) {
-                auto it = std::find(objetos.begin(), objetos.end(), static_cast<Object*>(ent));
-                if (it != objetos.end()) objetos.erase(it);
+                auto itObj = std::find_if(objetos.begin(), objetos.end(),
+                    [ent](Object* obj) { return static_cast<Entity*>(obj) == ent; });
+                if (itObj != objetos.end()) {
+                    objetos.erase(itObj);
+                } else {
+                    auto itNpc = std::find_if(characters.begin(), characters.end(),
+                        [ent](NPC* npc) { return static_cast<Entity*>(npc) == ent; });
+                    if (itNpc != characters.end()) {
+                        characters.erase(itNpc);
+                    }
+                }
                 delete ent;
             }
         }
@@ -651,18 +660,20 @@ void WorldState::draw() {
         }
     }
 
+    DBG_MARK("DRAW_BEFORE_DIALOGUE");
     dialogueManager.draw();
+    DBG_MARK("DRAW_AFTER_DIALOGUE");
 
     if(!dialogueManager.isActive()) {
+        DBG_MARK("DRAW_BEFORE_INTERACTABLE");
         Entity* ent = getInteractableEntity(Config::INTERACTION_DISTANTE);
         if (ent) {
             dialogueManager.call_expression(ent, camX, camY);
         }
+        DBG_MARK("DRAW_AFTER_INTERACTABLE");
     }
 
     dialogueManager.drawDebug();
-
-    DBG_MARK("DRAW_END");
 }
 
 

@@ -42,8 +42,6 @@ class SceneManager {
                         delete currentState; 
                         currentState = nullptr;
                     }
-                    
-                    C3D_FrameEnd(0);
 
                     currentState = nextState;
                     nextState = nullptr;
@@ -54,6 +52,9 @@ class SceneManager {
                     }
                     isFading = false;
                 }
+                // Durante el fade-out no ejecutamos lógica del estado actual:
+                // evita teleports/interacciones repetidas mientras se hace swap.
+                return;
             } else if (fadeAlpha > 0.0f) {
                 fadeAlpha -= 500.0f * dt;
                 if(fadeAlpha < 0.0f) fadeAlpha = 0.0f;

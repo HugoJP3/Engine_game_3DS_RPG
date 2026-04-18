@@ -63,16 +63,26 @@ void DialogueManager::update(float dt, u32 kDown) {
         animTime += dt;
 
         if (kDown & KEY_UP) {
-            selectedChoice--;
-            if (selectedChoice < 0) selectedChoice = currentBranch.choices.size() - 1;
+            if (!currentBranch.choices.empty()) {
+                if (selectedChoice == 0) selectedChoice = currentBranch.choices.size() - 1;
+                else selectedChoice--;
+            }
         }
 
         if (kDown & KEY_DOWN) {
-            selectedChoice++;
-            if (selectedChoice >= currentBranch.choices.size()) selectedChoice = 0;
+            if (!currentBranch.choices.empty()) {
+                selectedChoice++;
+                if (selectedChoice >= currentBranch.choices.size()) selectedChoice = 0;
+            }
         }
 
         if (kDown & KEY_A) {
+            if (currentBranch.choices.empty()) {
+                inChoiceMode = false;
+                active = false;
+                return;
+            }
+
             // aplicar flags de la opción
             for (auto& f : currentBranch.choices[selectedChoice].flagsOnSelect) {
                 flagManager->setFlag(f.first, f.second);
@@ -172,14 +182,21 @@ void DialogueManager::call_expression(Entity* ent, float camX, float camY) {
 
 
 void DialogueManager::draw() {
-    if (!active || !ui_dialogue || charIdx < 0) return;
+    if (!active || !ui_dialogue || !text_Buffer || !nombre_Buffer) return;
     
     // --- RENDERIZADO DE TEXTO ---
     C2D_TextBufClear(text_Buffer);
     C2D_TextBufClear(nombre_Buffer);
 
+    std::string visibleLine;
+    if (!currentBranch.lines.empty() && currentLineIdx < currentBranch.lines.size()) {
+        const std::string& line = currentBranch.lines[currentLineIdx];
+        size_t safeCharIdx = std::min(charIdx, line.size());
+        visibleLine = line.substr(0, safeCharIdx);
+    }
+
     C2D_Text texto_mostrar, texto_nombre;
-    C2D_TextParse(&texto_mostrar, text_Buffer, currentBranch.lines[currentLineIdx].substr(0, charIdx).c_str());
+    C2D_TextParse(&texto_mostrar, text_Buffer, visibleLine.c_str());
     C2D_TextParse(&texto_nombre, nombre_Buffer, character_name.c_str());
     
     C2D_TextOptimize(&texto_mostrar);
@@ -230,7 +247,8 @@ void DialogueManager::draw() {
     C2D_DrawText(&texto_nombre, C2D_WithColor, x_box + margenX_nombre, y_box + margenY_nombre, 1.0f, tamTexto, tamTexto, col_nombre);
 
     // Triángulo
-    if (charIdx >= currentBranch.lines[currentLineIdx].length()) {
+    if (!inChoiceMode && !currentBranch.lines.empty() && currentLineIdx < currentBranch.lines.size()
+        && charIdx >= currentBranch.lines[currentLineIdx].length()) {
         if (((int)(osGetTime() / 500) % 2) == 0) {
             float triX = x_box + boxWidth - 22.0f;
             float triY = y_box + boxHeight - 18.0f;
@@ -242,6 +260,9 @@ void DialogueManager::draw() {
 
     // --- MOSTRAR ELECCIONES MÚLTIPLES ---
     if (inChoiceMode) {
+        if (currentBranch.choices.empty()) return;
+        if (selectedChoice >= currentBranch.choices.size()) selectedChoice = 0;
+
         float spacing = 22.0f;
         float marginY = (boxHeight / currentBranch.choices.size()) / 2.0f;
         float startChoiceY = y_box + marginY;
@@ -287,6 +308,7 @@ void DialogueManager::debug(const std::string& s) {
 
 void DialogueManager::drawDebug() {
     if (debugText.empty()) return;
+    if (!debug_buff) return;
 
     float tamTexto = 0.5f;
     u32 col_texto = C2D_Color32(0, 0, 0, 255);
