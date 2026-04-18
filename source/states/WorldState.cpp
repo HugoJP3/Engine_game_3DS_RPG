@@ -75,7 +75,7 @@ void WorldState::loadNPC(const std::string& path) {
 
         // --- NPC BASE ---
         if (word == "npc") {
-            ss >> npcName;
+            npcName = line;
         }
         else if (word == "position") {
             ss >> x >> y;
