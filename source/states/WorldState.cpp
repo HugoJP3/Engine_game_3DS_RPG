@@ -57,6 +57,7 @@ void WorldState::loadNPC(const std::string& path) {
     int spriteIdx, animate = 0;
     float vel = 0.15f;
     int npcTone = -1;
+    Expression mood = CHAT;
 
     enum Parser_STATE { NONE, IN_BRANCH, IN_SAY, IN_SET, IN_CHOICE };
     Parser_STATE state = NONE;
@@ -91,6 +92,18 @@ void WorldState::loadNPC(const std::string& path) {
 
             if (ss.peek() != EOF) ss >> animate;
             if (ss.peek() != EOF) ss >> vel;
+        }
+        else if (word == "mood") {
+            std::string aux;
+            ss >> aux;
+
+            if (aux == "CHAT") mood = CHAT;
+            else if (aux == "ALERTED") mood = ALERTED;
+            else if (aux == "CONFUSED") mood = CONFUSED;
+            else {
+                DBG("WARN: mood desconocido: %s", aux.c_str());
+                mood = CHAT;
+            }
         }
         else if (word == "tone") {
             ss >> npcTone;
@@ -204,12 +217,12 @@ void WorldState::loadNPC(const std::string& path) {
     npc->init();
     npc->setSolid(true);
     npc->setVoiceTone(npcTone);
+    npc->setVel(vel);
+    npc->setMood(mood);
 
     if (spriteSheets.count(spriteName)) {
         npc->setSpriteSheet(spriteSheets[spriteName]);
     }
-
-    npc->setVel(vel);
 
     characters.push_back(npc);
 }

@@ -1,8 +1,8 @@
 npc Toca discos
-position 12 14
-size 32 16
-sprite hero 1 3 0.20
-mood CHAT
+position 12 13
+size 32 32
+sprite efectos 3
+mood CONFUSED
 tone 5
 
 branch
