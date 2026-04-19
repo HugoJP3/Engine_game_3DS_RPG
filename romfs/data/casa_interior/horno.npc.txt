@@ -1,0 +1,14 @@
+npc Horno
+position 6 5
+size 32 32
+sprite efectos 3
+mood CONFUSED
+tone 5
+
+branch
+    when none
+    say
+        Desde que todo el mundo es caracol\nya no cocinamos nada caliente...
+        Dentro del horno hay una sartén,\nuna bandeja y un cazo.
+    end
+end

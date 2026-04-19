@@ -1,0 +1,17 @@
+npc Pimienta (versión pollito)
+position 21.5 2
+size 16 16
+sprite characters 2 6 0.20
+mood CHAT
+tone 9
+
+branch
+    when none
+    say
+        ¡Hola Lucía!\nHugo lleva rato desaparecido...
+        Creo que se ha perdido...\n...Otra vez.
+        ...
+        ...
+        ¡Pio! ¡Pio!
+    end
+end

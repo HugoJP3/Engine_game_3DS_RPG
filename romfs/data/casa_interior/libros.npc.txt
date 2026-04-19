@@ -1,0 +1,14 @@
+npc Libros
+position 8 9
+size 32 32
+sprite efectos 3
+mood CONFUSED
+tone 5
+
+branch
+    when none
+    say
+        Hay varios libros en la estantería...
+        Noches blancas, Rebeldes,\nTres ratones ciegos...
+    end
+end

@@ -1,0 +1,14 @@
+npc Bañera humana
+position 22 15
+size 48 31
+sprite efectos 3
+mood CONFUSED
+tone 5
+
+branch
+    when none
+    say
+        Desde que somos caracoles\nno nos bañamos...
+        Lo cual es súper gozoso.
+    end
+end

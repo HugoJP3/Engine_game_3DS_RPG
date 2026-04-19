@@ -1,0 +1,14 @@
+npc Reloj roto
+position 19 1
+size 32 32
+sprite efectos 3
+mood CONFUSED
+tone 5
+
+branch
+    when none
+    say
+        El reloj está roto...\npero Hugo no lo quiere tirar...
+        ...porque da la hora bien\ndos veces al día.
+    end
+end

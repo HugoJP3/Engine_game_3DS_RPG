@@ -1,0 +1,14 @@
+npc Nevera
+position 4 5
+size 32 32
+sprite efectos 3
+mood CONFUSED
+tone 5
+
+branch
+    when none
+    say
+        ¿Has oído hablar del frigorífico\nque solo podía hacer hielo picado?
+        Sus sueños de hacer cubitos de hielo\nse hicieron añicos...
+    end
+end
