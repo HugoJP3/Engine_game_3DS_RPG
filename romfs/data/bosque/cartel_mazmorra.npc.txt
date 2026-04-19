@@ -1,0 +1,14 @@
+npc PELIGRO
+position 95 10
+size 32 16
+sprite efectos 3
+mood ATTACK
+tone 5
+
+branch
+    when none
+    say
+        ¡PELIGRO! EXTREME LA PRECAUCIÓN\n¿Este camino conduce a Gondor?
+        ¡Es broma, este camino conduce al SEPE!\n¡LO CUAL ES PEOR!
+    end
+end

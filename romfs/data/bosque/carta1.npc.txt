@@ -1,0 +1,20 @@
+npc Carta de Hugo
+position 15 11
+size 12 16
+sprite efectos 3
+mood LOVE
+tone 1
+
+branch
+    when none
+    say
+        Hola Lucía,\nEspero que esta carta te llegue bien...
+        Mientras dormías, salí a comprar el pan <3\nY una bruja me raptó...
+        Es broma...
+        ...
+        ...
+        Pero me he perdido,\nEsto de ser caracol es muy raro :(
+        ¿Puedes venir a buscarme?\nTe escribo desde el pueblo.
+        Date una vuelta por la comarca,\nseguro que te encanta.
+    end
+end

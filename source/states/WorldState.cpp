@@ -100,6 +100,8 @@ void WorldState::loadNPC(const std::string& path) {
             if (aux == "CHAT") mood = CHAT;
             else if (aux == "ALERTED") mood = ALERTED;
             else if (aux == "CONFUSED") mood = CONFUSED;
+            else if (aux == "ATTACK") mood = ATTACK;
+            else if (aux == "LOVE") mood = LOVE;
             else {
                 DBG("WARN: mood desconocido: %s", aux.c_str());
                 mood = CHAT;

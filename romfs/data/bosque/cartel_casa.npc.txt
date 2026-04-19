@@ -1,0 +1,14 @@
+npc Casa Lucía y Hugo
+position 19 11
+size 16 16
+sprite efectos 3
+mood CONFUSED
+tone 5
+
+branch
+    when none
+    say
+        Bienvenido a la casa de Hugo y Lucía.
+        Traiga buena vibra y animalitos monos.
+    end
+end

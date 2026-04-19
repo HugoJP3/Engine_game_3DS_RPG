@@ -3,6 +3,7 @@ position 20 15
 size 37 31
 sprite characters 0 0
 tone 9
+mood LOVE
 
 branch
     when none

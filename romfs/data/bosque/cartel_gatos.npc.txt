@@ -1,0 +1,14 @@
+npc Casa del señor y la señora Miaus
+position 89 4
+size 12 16
+sprite efectos 3
+mood LOVE
+tone 5
+
+branch
+    when none
+    say
+        <3 Aquí vive una familia de gatitos <3
+        <3 Los invitados que traigan pescado\nson bien recibidos. <3
+    end
+end

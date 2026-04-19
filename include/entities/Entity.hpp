@@ -10,7 +10,9 @@ class Inventory;
 typedef enum {
     ALERTED = 3,
     CHAT,
-    CONFUSED
+    CONFUSED,
+    ATTACK,
+    LOVE
 } Expression;
 
 // Cuando se dé una interacción básica

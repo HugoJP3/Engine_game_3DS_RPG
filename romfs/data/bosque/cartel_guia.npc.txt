@@ -1,0 +1,13 @@
+npc INFORMACIÓN
+position 56 12
+size 48 16
+sprite efectos 3
+mood CONFUSED
+tone 5
+
+branch
+    when none
+    say
+        ← Comarca                       Gondor →\n                  ↓ Pueblo feliz
+    end
+end
