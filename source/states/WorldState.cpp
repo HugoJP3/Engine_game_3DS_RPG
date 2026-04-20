@@ -485,55 +485,88 @@ CollisionType WorldState::checkAllCollisions() {
 }
 
 // DETECTAR "Interacción" ENTRE PERSONAJE-ENTITY
-Entity* WorldState::getInteractableEntity(float maxDistance) {    
-    // Centro del jugador
-    float px = player->getCenterX();
-    float py = player->getCenterY();
+Entity* WorldState::getInteractableEntity(float maxDistance)
+{
+    // Hitbox del jugador
+    float px1 = player->getX() + player->getOffsetX();
+    float py1 = player->getY() + player->getOffsetY();
+    float px2 = px1 + player->getColWidth();
+    float py2 = py1 + player->getColHeight();
 
+    Entity* bestOverlap = nullptr;
+    float bestOverlapDist2 = 99999999.0f; // valor grande seguro
+
+    Entity* bestNear = nullptr;
     float maxDist2 = maxDistance * maxDistance;
+    float bestNearDist2 = maxDist2;
 
-    Entity* closestEntity = nullptr;
+    auto processEntity = [&](Entity* e) {
+        if (!e) return;
 
-    float closestDist2 = maxDist2;
+        float ex1 = e->getX() + e->getOffsetX();
+        float ey1 = e->getY() + e->getOffsetY();
+        float ex2 = ex1 + e->getColWidth();
+        float ey2 = ey1 + e->getColHeight();
 
-    for (NPC* npc : characters) {
-        if (!npc) continue;
+        // ¿Tocan o solapan AABBs?
+        bool overlap =
+            !(px2 < ex1 || px1 > ex2 || py2 < ey1 || py1 > ey2);
 
-        // Centro del NPC
-        float nx = npc->getCenterX();
-        float ny = npc->getCenterY();
+        // Distancia entre centros (para desempatar)
+        float cxp = (px1 + px2) * 0.5f;
+        float cyp = (py1 + py2) * 0.5f;
+        float cxe = (ex1 + ex2) * 0.5f;
+        float cye = (ey1 + ey2) * 0.5f;
 
-        float dx = px - nx;
-        float dy = py - ny;
+        float dcx = cxp - cxe;
+        float dcy = cyp - cye;
+        float centerDist2 = dcx*dcx + dcy*dcy;
 
-        float dist2 = dx * dx + dy * dy;
-
-        if (dist2 < closestDist2) {
-            closestDist2 = dist2;
-            closestEntity = npc;
+        if (overlap) {
+            if (centerDist2 < bestOverlapDist2) {
+                bestOverlapDist2 = centerDist2;
+                bestOverlap = e;
+            }
+            return;
         }
-    }
 
-    for (Object* obj : objetos) {
-        if (!obj) continue;
+        // Distancia mínima entre bordes
+        float dx = 0.0f;
+        if (px2 < ex1) dx = ex1 - px2;
+        else if (ex2 < px1) dx = px1 - ex2;
 
-        // Centro del Objeto
-        float nx = obj->getCenterX();
-        float ny = obj->getCenterY();
+        float dy = 0.0f;
+        if (py2 < ey1) dy = ey1 - py2;
+        else if (ey2 < py1) dy = py1 - ey2;
 
-        float dx = px - nx;
-        float dy = py - ny;
+        float edgeDist2 = dx*dx + dy*dy;
 
-        float dist2 = dx * dx + dy * dy;
-
-        if (dist2 < closestDist2) {
-            closestDist2 = dist2;
-            closestEntity = obj;
+        if (edgeDist2 < bestNearDist2) {
+            bestNearDist2 = edgeDist2;
+            bestNear = e;
         }
-    }
+    };
 
-    return closestEntity;
+    // Procesar NPCs
+    for (NPC* npc : characters)
+        processEntity(npc);
+
+    // Procesar objetos
+    for (Object* obj : objetos)
+        processEntity(obj);
+
+    // 1) Si hay algo tocando/solapando, eso manda
+    if (bestOverlap)
+        return bestOverlap;
+
+    // 2) Si no, devolver lo más cercano dentro del rango
+    if (bestNear && bestNearDist2 <= maxDist2)
+        return bestNear;
+
+    return nullptr;
 }
+
+
 
 // ACTUALIZACIÓN (FRAME):
 void WorldState::update(float dt, u32 kDown) {
@@ -550,11 +583,12 @@ void WorldState::update(float dt, u32 kDown) {
     float oldY = player->getY();
 
     // --- Movimiento personajes/objetos ---
-    for(NPC* npc : characters) {
-        if (!npc) { DBG("NPC NULL!"); continue; }
+    float playerFeet = player->getY() + player->getOffsetY() + player->getColHeight();
+    for (NPC* npc : characters) {
         npc->update(dt);
-        npc->updateY(oldY);
+        npc->updateY(playerFeet);
     }
+
     
     for (Object* obj : objetos) {
         if (!obj) { DBG("OBJ NULL!"); continue; }

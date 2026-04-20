@@ -1,4 +1,4 @@
-npc Soldada
+npc Soldada Daniela
 position 80 10
 size 43 28
 sprite characters 40 0
@@ -8,7 +8,7 @@ branch
     when none
     say
         No puedes pasar.
-        Se está librando una guerra en este momento.
+        Se está librando una guerra ahora.
         ...
         Algo de un anillo.\nCreo que el rey se casa.
     end

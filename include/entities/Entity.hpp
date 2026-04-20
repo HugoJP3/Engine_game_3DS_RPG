@@ -120,7 +120,7 @@ class Entity {
         float getRenderY(float camY) const { return (y - camY) * Config::globalScale; }
 
         // --- MÉTODO COLISIÓN ---
-        bool checkCollision(Entity& other)
+        bool checkCollision(const Entity& other) const
         {         
             float offset1X = collision.offsetX;
             float offset1Y = collision.offsetY;

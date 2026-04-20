@@ -1,5 +1,5 @@
 npc Muerto
-position 64 2
+position 64 1.5
 size 35 22
 sprite characters 33 0
 tone 0

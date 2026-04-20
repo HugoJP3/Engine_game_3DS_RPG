@@ -1,6 +1,6 @@
 npc Clara feliz
-position 46 2
-size -77 44
+position 42 2
+size 77 32
 sprite characters 23 0
 tone 8
 

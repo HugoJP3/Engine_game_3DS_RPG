@@ -31,7 +31,7 @@ branch
     say
         Es que me da mucho miedo, jo...
         ¿Sabes?
-        Oí hablar de unos caracobbits que salieron.\n¿Dónde estarán?
+        Se dice de unos caracobbits que salieron.\n¿Dónde estarán?
     end
     set
         ENCOGIDO_generic true
@@ -43,7 +43,7 @@ branch
     say
         Quizás tengas razón.
         ¿Sabes?
-        Oí hablar de unos caracobbits que salieron.\n¿Dónde estarán?
+        Se dice de unos caracobbits que salieron.\n¿Dónde estarán?
     end
     set
         ENCOGIDO_generic true

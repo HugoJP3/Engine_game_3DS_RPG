@@ -63,11 +63,14 @@ class NPC : public Entity {
             else voiceTone = t;
         }
 
-        void updateY(float yPlayer) {
-            // Variar altura con la del personaje (Z dibujado)
-            if (yPlayer < y) z = 0.45f;
-            else z = 0.35f;
+       void updateY(float yPlayerCenter) {
+            float npcFeet = y + collision.offsetY + collision.height;
+            if (yPlayerCenter < npcFeet)
+                z = 0.45f;   // NPC delante
+            else
+                z = 0.35f;   // NPC detrás
         }
+
 
         void update(float dt) override {
             // Animación
