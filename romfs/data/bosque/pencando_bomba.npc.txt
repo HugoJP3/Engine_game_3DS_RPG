@@ -1,0 +1,13 @@
+npc Clara feliz
+position 46 2
+size -77 44
+sprite characters 23 0
+tone 8
+
+branch
+    when none
+    say
+        Vengo aquí a pescar melones...
+        Por ahora no pican...
+    end
+end

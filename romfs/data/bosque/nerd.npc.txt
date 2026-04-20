@@ -1,0 +1,13 @@
+npc Cazabichos María
+position 41 4
+size 36 29
+sprite characters 53 0
+tone 3
+
+branch
+    when none
+    say
+        Vengo del pueblo porque aquí hay más\nbichitos monos.
+        En el pueblo hay un cine\ndonde proyectan pelis cultas.
+    end
+end

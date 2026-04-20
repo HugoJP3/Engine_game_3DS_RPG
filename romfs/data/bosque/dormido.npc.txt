@@ -1,0 +1,14 @@
+npc José niño dormido
+position 8 20
+size 46 30
+sprite characters 9 4 0.8
+tone 2
+
+branch
+    when none
+    say
+        Zzzz... Zzzz...
+        Lechuguita fresca...
+        Zzzz... Zzzz...
+    end
+end

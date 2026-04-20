@@ -1,0 +1,12 @@
+npc Soldado de prácticas
+position 80 9
+size 43 28
+sprite characters 40 0
+tone 8
+
+branch
+    when none
+    say
+        Yo solo quería estudiar\nadministración de empresas...
+    end
+end

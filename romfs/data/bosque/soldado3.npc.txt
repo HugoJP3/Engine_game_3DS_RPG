@@ -1,0 +1,12 @@
+npc Soldado
+position 80 11
+size 43 28
+sprite characters 40 0
+tone 3
+
+branch
+    when none
+    say
+        Si aguanto hasta las 15:00,\nme dan un bocata.
+    end
+end

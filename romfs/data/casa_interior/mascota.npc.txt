@@ -1,5 +1,5 @@
 npc Pimienta (versión pollito)
-position 21.5 2
+position 21.2 2
 size 16 16
 sprite characters 2 6 0.20
 mood CHAT

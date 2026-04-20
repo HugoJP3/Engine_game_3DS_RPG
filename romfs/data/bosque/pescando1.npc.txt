@@ -1,0 +1,12 @@
+npc Antonio Vagabundo
+position 26 21
+size 76 32
+sprite characters 22 0
+tone 2
+
+branch
+    when none
+    say
+        No debí decir que la Princesa Prometida\nes una mala película...
+    end
+end

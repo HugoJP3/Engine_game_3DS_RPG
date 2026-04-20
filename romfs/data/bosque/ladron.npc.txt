@@ -1,0 +1,13 @@
+npc Ladrón de Corazones
+position 10 5
+size 43 27
+sprite characters 73 0
+tone 0
+
+branch
+    when none
+    say
+        He oído que en esta casa\nvive una princesa hermosa.
+        He venido a robar su corazon...\nahora que su pareja se ha perdido.
+    end
+end

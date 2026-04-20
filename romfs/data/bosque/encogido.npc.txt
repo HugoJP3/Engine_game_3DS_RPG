@@ -1,0 +1,58 @@
+npc Luisa asustada
+position 37 10
+size 31 22
+sprite characters 31 0
+tone 8
+
+branch
+    when none
+    say
+        Quizás algún día vaya al pueblo...
+    end
+end
+
+branch
+    when ENCOGIDO_state1 false
+    say
+        Quiero ir a Pueblo Feliz...\nPero me da mucho miedo... :(
+    end
+
+    choice Fuas, ¿por qué no lo intentas?
+        set ENCOGIDO_state1 true
+    end
+
+    choice La avaricia rompe el saco.
+        set ENCOGIDO_state2 true
+    end
+end
+
+branch
+    when ENCOGIDO_state1 true
+    say
+        Es que me da mucho miedo, jo...
+        ¿Sabes?
+        Oí hablar de unos caracobbits que salieron.\n¿Dónde estarán?
+    end
+    set
+        ENCOGIDO_generic true
+    end
+end
+
+branch
+    when ENCOGIDO_state2 true
+    say
+        Quizás tengas razón.
+        ¿Sabes?
+        Oí hablar de unos caracobbits que salieron.\n¿Dónde estarán?
+    end
+    set
+        ENCOGIDO_generic true
+    end
+end
+
+branch
+    when ENCOGIDO_generic true
+    say
+        ¿Crees que volverán los caracobbits\nque salieron?
+    end
+end

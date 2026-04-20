@@ -1,0 +1,15 @@
+npc Muerto
+position 64 2
+size 35 22
+sprite characters 33 0
+tone 0
+
+branch
+    when none
+    say
+        ...
+        ...
+        ...
+        No debí reirme de Cuarteto de Nos...
+    end
+end

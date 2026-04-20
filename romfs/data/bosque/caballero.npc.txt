@@ -1,0 +1,16 @@
+npc Sir Caragorn, rey de Conchador
+position 83 10
+size 55 40
+sprite characters 63 0
+tone 0
+
+branch
+    when none
+    say
+        Caminante, detén tu paso y escucha\nla sombra que se extiende tras el sendero.
+        Más allá de estas piedras yace\nun lugar cuya luz se quiebra.
+        Si continúas, no hallarás descanso ni retorno...
+        ...
+        ¡Pues este camino conduce a Mordor!\nDonde la esperanza teme pronunciar palabra.
+    end
+end

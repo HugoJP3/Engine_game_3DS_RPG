@@ -1,0 +1,13 @@
+npc Chica Pepa
+position 66 8
+size 37 27
+sprite characters 18 0
+tone 8
+
+branch
+    when none
+    say
+        Antes de ser caracol yo era espía...
+        Ahora dejo mi rastro por todas partes.
+    end
+end
