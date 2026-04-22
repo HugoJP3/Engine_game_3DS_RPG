@@ -36,10 +36,6 @@ int main()
     FlagManager flagManager;
     ResourceManager::get().init();
     AudioManager::get().init();
-
-    //Sound& bgm = AudioManager::get().getSound("romfs:/audio/tema.wav");
-    //AudioManager::get().playBGM(bgm, "romfs:/audio/tema.wav");
-
     
     // Inicio personaje:
     float initialX = 10 * Config::TILE_SIZE;
@@ -82,31 +78,11 @@ int main()
         circlePosition pos;
 		hidCircleRead(&pos);
 
-        // DEBUG:
-        /*
-        printf("\x1b[1;1H\x1b[32m-- DEBUG CONSOLE --\x1b[0m"); // Título en verde
-        printf("\x1b[2;1HCP: %04d; %04d\x1b[K", pos.dx, pos.dy); // \x1b[K limpia hasta el final de la línea
-        printf("\x1b[3;1HTP: %03d; %03d\x1b[K", touch.px, touch.py);
-        printf("\x1b[5;1HCPU:    %6.2f%%\x1b[K", C3D_GetProcessingTime()*6.0f);
-        printf("\x1b[6;1HGPU:    %6.2f%%\x1b[K", C3D_GetDrawingTime()*6.0f);
-        
-        printf("\x1b[8;1H\x1b[33m-- FLAGS --\x1b[0m\x1b[K");
-        
-        // Dibujamos las flags a partir de la línea 9
-        int line = 9;
-        for (auto const& f : flagManager.getCurrentFlags()) {
-            printf("\x1b[%d;1H %-15s | %s\x1b[K", line++, (f.first).c_str(), f.second ? "true" : "false");
-            if(line > 25) break; // Evitar salirnos de la pantalla
-        }
-                
-        // Limpiar las líneas sobrantes por si alguna flag se borra
-        for(int i = line; i < 28; i++) printf("\x1b[%d;1H\x1b[K", i);
-        */
-
         // APLICACIÓN
         manager->update(dt, kDown);
         AudioManager::get().update();
 
+        // DRAW
         C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
         manager->draw();
         C3D_FrameEnd(0);

@@ -1,0 +1,21 @@
+npc <3 Boutique de Lucía <3
+position 43 28
+size 16 16
+sprite efectos 3
+mood LOVE
+tone 8
+
+branch
+    when none
+    say
+        ¡Tenemos caracolas para todos!
+        ¡Gasterópodos, Bivalvos,\nCefalópodos y Aplacóforos!
+        ...
+        Todo es mu bonico y\nmuy low cortisol.
+        ...
+        ...
+        Ya puedes dejar de escribir.\nAcho, Hugo ya.
+        ¿Sigues escribiendo?\nEspero que no.
+        Oye, me apetece sushi.
+    end
+end

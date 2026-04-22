@@ -1,0 +1,13 @@
+npc Babosa Felipa
+position 5 49
+size 36 27
+sprite characters 65 0
+tone 9
+
+branch
+    when none
+    say
+        Tía, soy la primera propietaria.
+        La concha es una cárcel.
+    end
+end

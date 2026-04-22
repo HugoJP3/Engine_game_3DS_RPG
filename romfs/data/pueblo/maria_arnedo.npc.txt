@@ -1,0 +1,62 @@
+npc Dra. María Arnedo
+position 20 50
+size 37 30
+sprite characters 35 0
+tone 7
+
+branch
+    when none
+    say
+        Holaaaa!
+    end
+end
+
+branch
+    when MA_state1 false
+    say
+        Holaaaa!
+        Mi paciente se moría de curiosidad\npor saber sus resultados.
+        Y no solo de curiosidad.
+    end
+
+    choice Me voy a suicidar.
+        set MA_state1 true
+    end
+
+    choice Aiba, ¿te pilló estudiando?
+        set MA_state2 true
+    end
+end
+
+branch
+    when MA_state1 true
+    say
+        Pues ala, ya son dos muertos.
+        Estoy volviendo a ver Hungría 2006.
+        Carrerón en mojado con una salida\nincreíble de Alonso desde la 15.
+        Una lástima que le petara una tuerca\ncuando iba liderando la carrera.
+    end
+    set
+        MA_generic true
+    end
+end
+
+branch
+    when MA_state2 true
+    say
+        Ahora no.
+        Estoy volviendo a ver Hungría 2006.
+        Carrerón en mojado con una salida\nincreíble de Alonso desde la 15.
+        Una lástima que le petara una tuerca\ncuando iba liderando la carrera.
+    end
+    set
+        MA_generic true
+    end
+end
+
+branch
+    when MA_generic true
+    say
+        Si sigo cargándome así a los pacientes,\ndebería pensar en hacerme forense.
+    end
+end

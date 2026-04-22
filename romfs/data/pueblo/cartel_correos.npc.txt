@@ -1,0 +1,14 @@
+npc Correos
+position 37 38
+size 16 16
+sprite efectos 3
+mood CONFUSED
+tone 7
+
+branch
+    when none
+    say
+        Lentitud garantizada.
+        Ahora sellamos con baba orgánica.
+    end
+end

@@ -1,0 +1,13 @@
+npc Cartero José
+position 38 38
+size 50 30
+sprite characters 58 0
+tone 9
+
+branch
+    when none
+    say
+        Estoy orgulloso del servicio.
+        Tenemos a cienpiés y saltamontes\nentregando cartas a montones.
+    end
+end

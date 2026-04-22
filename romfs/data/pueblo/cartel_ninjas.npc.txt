@@ -1,0 +1,18 @@
+npc Escuela Ninja Mitsubishi Domo Domo
+position 13 16
+size 16 16
+sprite efectos 3
+mood CONFUSED
+tone 5
+
+branch
+    when none
+    say
+        Abre tu mente,\nSal de la concha.
+        Arrástrate sin dejar rastro.
+        Aprende el golpe doble cuerno.
+        Sé un ninja.
+        ...
+        ¡Únete por solo 299 lechugas/mes!
+    end
+end

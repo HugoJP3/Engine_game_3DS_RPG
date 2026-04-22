@@ -1,0 +1,21 @@
+npc Marcos Quiles
+position 43 41
+size 59 58
+sprite characters 92 2 0.5
+tone 5
+
+branch
+    when none
+    say
+        SAL DE LA MATRIX
+        SAL DE LA MATRIX
+        ...
+        Ah.\nHola Lucía.
+        He analizado el código de este juego.
+        ESTA LLENO DE BUGS
+        JEJEJEJEJE
+        JEJEJEJEJE
+        ...
+        Por cierto,\n¿Has visto a Aitana?
+    end
+end

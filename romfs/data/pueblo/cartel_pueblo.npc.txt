@@ -1,0 +1,13 @@
+npc INFORMACIÓN
+position 6 3
+size 32 16
+sprite efectos 3
+mood CONFUSED
+tone 5
+
+branch
+    when none
+    say
+        ↑ Comarca\n↓ Caracópolis
+    end
+end

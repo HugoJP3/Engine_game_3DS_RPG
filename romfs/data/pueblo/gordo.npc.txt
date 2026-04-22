@@ -1,0 +1,19 @@
+npc Alcaldesa Marina
+position 44 30
+size 39 30
+sprite characters 38 0
+tone 0
+
+branch
+    when none
+    say
+        ¡Hombre, socia!\n¡Qué elegancia, qué porte!
+        ¿Ves esta concha nueva?
+        La hemos pagado con el presupuesto\nde las farolas.
+        ¡Pero mira qué brillo!
+        ...
+        Oye.
+        ¿Cómo va nuestro... asunto?\nLo de los tintes...
+        He declarado el amarillo obligatorio.\nMañana tendrás mil clientes más.
+    end
+end

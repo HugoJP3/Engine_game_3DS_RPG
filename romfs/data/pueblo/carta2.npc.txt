@@ -1,0 +1,17 @@
+npc Carta de Hugo
+position 10 18
+size 12 16
+sprite efectos 3
+mood LOVE
+tone 1
+
+branch
+    when none
+    say
+        Hola Lucía,\nEspero que todo vaya bien...
+        Te escribo desde un sitio con arena.\nCreo que estoy en una playa.
+        Un señor no me deja salir.\nEstamos meditando.
+        Te escribiré si pasa algo.
+        Será mejor que vayas a tu boutique.\nCreo que tienes clientes...
+    end
+end

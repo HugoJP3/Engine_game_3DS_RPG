@@ -1,0 +1,13 @@
+npc Conspiranoico
+position 41 42
+size 36 31
+sprite characters 19 0
+tone 5
+
+branch
+    when none
+    say
+        El hermafroditismo es woke.
+        He visto el código fuente.\n¡Todo es mentira!
+    end
+end

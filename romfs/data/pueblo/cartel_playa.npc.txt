@@ -1,0 +1,13 @@
+npc INFORMACIÓN
+position 12 58
+size 32 16
+sprite efectos 3
+mood CONFUSED
+tone 5
+
+branch
+    when none
+    say
+        ↑ Caracópolis\n↓ Playa
+    end
+end

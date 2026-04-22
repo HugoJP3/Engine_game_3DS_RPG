@@ -1,0 +1,59 @@
+npc Cinéfilo Héctor
+position 12 40
+size 36 39
+sprite characters 42 0
+tone 0
+
+branch
+    when none
+    say
+        El cine ya no es\nlo que era...
+    end
+end
+
+branch
+    when CINE_state1 false
+    say
+        ¿Vas a entrar?\nUff...
+        Es un poco mainstream.
+        Yo prefiero el cine real,\nsin imagen ni sonido.
+        El cine actual es demasiado\nfast food visual.
+        ¿Te has visto "Moluscos sin concha"?\nDe Karl Eriksson (1946).
+    end
+
+    choice No, ¿qué me estás contando?
+        set CINE_state1 true
+    end
+
+    choice Yo solo quería la hora.
+        set CINE_state1 true
+    end
+end
+
+branch
+    when CINE_state1 true
+    say
+        ¿No? Se nota.\nTe falta bagaje visual.
+        Es una película finlandesa donde se\nexplora la vanalidad de la concha.
+        ...
+        Sublime.
+        ...
+        ¿Sabías que el protagonista\nno es un caracol real?
+        Es un concepto abstracto\ninterpretado por un kiwi.
+        ...
+        ABSOLUTE CINEMA.
+        ...
+    end
+    set
+        CINE_generic true
+    end
+end
+
+branch
+    when CINE_generic true
+    say
+        ¿La casa de los famosos?
+        No, bro.
+        A mí avísame cuando hagan la casa\nde los cineastas experimentales húngaros.
+    end
+end

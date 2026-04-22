@@ -1,0 +1,62 @@
+npc Policía
+position 22 29
+size 37 28
+sprite characters 57 0
+tone 2
+
+branch
+    when none
+    say
+        ¡Alto en nombre de la ley!
+        Circule despacio.\nBueno, más despacio aún.
+    end
+end
+
+branch
+    when Poli_state1 false
+    say
+        ¡Alto en nombre de la ley!
+        Lleva exceso de hermosura.
+        Circule despacio...
+        Bueno, más despacio aún.
+    end
+    set
+        Poli_state1 true
+    end
+end
+
+branch
+    when Poli_state1 true
+    say
+        Han robado mil pelucas\nen la Boutique de la jefa.
+        No tenemos pistas...\npero estamos peinando la zona.
+    end
+    set
+        Poli_state2 true
+    end
+end
+
+branch
+    when Poli_state2 true
+    say
+        Se robaron un camión cargado de Viagra.
+        Buscamos a tipos bien duros.
+    end
+    set
+        Poli_state3 true
+    end
+end
+
+branch
+    when Poli_state3 true
+    say
+        Mi hijo está prácticando natación.
+        ¿Y qué tal va?
+        Nada mal... está en el fondo.
+    end
+    set
+        Poli_state1 false
+        Poli_state2 false
+        Poli_state3 false
+    end
+end

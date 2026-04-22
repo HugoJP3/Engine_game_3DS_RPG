@@ -1,0 +1,13 @@
+npc Militar
+position 20 27
+size 37 28
+sprite characters 24 0
+tone 2
+
+branch
+    when none
+    say
+        ¡Sin novedad en el frente!
+        El enemigo ha avanzado 1 mm.
+    end
+end

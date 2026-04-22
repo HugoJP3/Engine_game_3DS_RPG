@@ -1,0 +1,17 @@
+npc Obrero Vicente
+position 12 44
+size 25 59
+sprite characters 86 4 0.1
+tone 0
+
+branch
+    when none
+    say
+        Estamos avanzando mucho.
+        Poner un ladrillo al mes\nevita el estrés laboral.
+        Si el cliente tiene prisa,\nque se compre un hámster.
+        ...
+        Me pagan en lechuga\ny encima está mustia.
+        No me estreses.
+    end
+end

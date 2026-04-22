@@ -1,0 +1,19 @@
+npc Inmobiliaria: Luxury Slime Homes
+position 10 49
+size 16 16
+sprite efectos 3
+mood CONFUSED
+tone 7
+
+branch
+    when none
+    say
+        ¡ESTA ES TU OPORTUNIDAD!\nInversión única en la costa.
+        Presentamos: The Saltless Garden.\nNew Construction and Slow Living.
+        ¿Cansada de cargar con tu casa?\n¡Exeternaliza tu concha ahora!
+        Prime location: a solo 2 metros\nde la orilla (no salina).
+        Diseño vanguardista minimalista:\nSin paredes, sin techo, pura brisa.
+        ...
+        SOLO 900.000 lechugas frescas.
+    end
+end

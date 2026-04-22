@@ -29,7 +29,7 @@ end
 branch
     when ENCOGIDO_state1 true
     say
-        Es que me da mucho miedo, jo...
+        Es que me da mucho miedito, jo...\nMe cago encima.
         ¿Sabes?
         Se dice de unos caracobbits que salieron.\n¿Dónde estarán?
     end

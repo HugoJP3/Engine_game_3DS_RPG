@@ -1,0 +1,24 @@
+npc Ninja Maestro Tepika Elkuki
+position 16 15
+size 36 38
+sprite characters 55 0
+tone 9
+
+branch
+    when none
+    say
+        ¡NANI! ¡SUDOKU! ¡NINTENDO!
+        ¡No des ni un paso más!
+        Estás ante el cinturón negro\nde la escuela Mitsubishi.
+        Soy un arma biológica.
+        ¿Ves esta antena?\nEstá registrada como arma blanca.
+        ¡TAMAGOTCHI! ¡SUZUKI!
+        Puedo matarte de 40 formas.
+        Pero todas requieren que no\nte muevas en dos días.
+        ¡HONDA! ¡SAYONARA! ¡SUBARU!
+        Si intentas atacarme activaré\nmi Escudo Toyota.
+        ¡KARAOKE! ¡YAKISUBA!
+        ¡DESAPAREZCO!
+        ¡Bomba de humo!
+    end
+end

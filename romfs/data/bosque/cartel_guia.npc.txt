@@ -8,6 +8,6 @@ tone 5
 branch
     when none
     say
-        ← Comarca                       Gondor →\n                  ↓ Pueblo feliz
+        ← Comarca                       Gondor →\n                  ↓ Caracópolis
     end
 end

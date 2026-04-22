@@ -1,0 +1,17 @@
+npc Cinema Parabicho
+position 16 40
+size 16 16
+sprite efectos 3
+mood CONFUSED
+tone 7
+
+branch
+    when none
+    say
+        --- Cartelera ---
+        Qué lento es vivir.
+        La babosa prometida.
+        Durmiendo bajo la lluvia.
+        Siete novias hermafroditas para siete...\n...novios hermafroditas.
+    end
+end

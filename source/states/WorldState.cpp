@@ -695,6 +695,12 @@ void WorldState::update(float dt, u32 kDown) {
     if (camX > mapaAncho - screenW_world) camX = mapaAncho - screenW_world;
     if (camY > mapaAlto - screenH_world) camY = mapaAlto - screenH_world;
     
+
+    
+    // DEBUG
+    DBG("CPU:    %6.2f%%", C3D_GetProcessingTime()*6.0f);
+    DBG("GPU:    %6.2f%%", C3D_GetDrawingTime()*6.0f);
+
 }
 
 // DIBUJAR:

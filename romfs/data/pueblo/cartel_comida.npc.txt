@@ -1,0 +1,23 @@
+npc ¡Smash Baba Burger - New Opening!
+position 20 45
+size 16 16
+sprite efectos 3
+mood CONFUSED
+tone 7
+
+branch
+    when none
+    say
+        ¡BRO!
+        ¡LA REVOLUCIÓN GASTERÓPODA LLEGÓ!
+        Olvídate de lo que sabías sobre comer.
+        Olvídate de masticar lechuga mojada.\nEso es cosa de tus abuelos.
+        Nosotros venimos a ROM-PER-LO.
+        Hemos creado la primera\nSmash Baba Burger del mundo.
+        ¿El secreto?\nUna técnica milenaria.
+        Aplastamos nuestro musgo premium\nhasta que carameliza con su humedad.
+        Pure Umami, bro.
+        ...
+        Aviso: No tenemos servicio a domicilio.\nEl repartidor tardaba tres días.
+    end
+end
