@@ -1,0 +1,21 @@
+npc Papa Muerte
+position 31 11
+size 38 31
+sprite characters 34 0
+tone 0
+mood ATTACK
+
+branch
+    when none
+    say
+        Buenos días, joven.
+        Le ruego no se asuste.
+        Solo estoy de tutorías\ncon mi pequeño retoño.
+        Le explico cómo obtener una transición\nde qualité... Ya sabe.
+        Entenderá usted que nuestra labor\nes un tanto... intimidatoria.
+        ...
+        Por cierto, tenga cuidado.
+        Estas tierras están llenas de maleantes.
+        Hace nada un tal Boromir\natacó a un caracobbit...
+    end
+end

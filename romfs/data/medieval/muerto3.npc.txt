@@ -1,0 +1,12 @@
+npc Muerto
+position 21 11
+size 35 22
+sprite characters 33 0
+tone 0
+
+branch
+    when none
+    say
+        ...
+    end
+end

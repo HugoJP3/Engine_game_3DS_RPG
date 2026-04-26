@@ -1,0 +1,27 @@
+npc Boromir, con B de Babas-ónico
+position 8 8
+size 55 40
+sprite characters 63 0
+tone 9
+mood ATTACK
+
+branch
+    when none
+    say
+        Intenté quitarle el anillo...
+        Es un destino extraño que suframos\ntanto miedo por algo tan pequeño.
+        El mundo de los hombres caerá,\ny todo se sumirá en oscuridad.
+        ...
+        Creo que es momento para otra\nbomba de humo
+        Y batirme en retirada
+        Nuestra sociedad me perjudica
+        Vos no sos una chica cualquiera
+        ...
+        Quizás fue en la mañana en que,\nvendados, los dos
+        Descubrimos cómo eran las cosas
+        Y, sin abrir los ojos,\nnos teletransportamos
+        A donde desearíamos estar
+        ...
+        Salva a mi pueblo...\nYo he fracasado.
+    end
+end

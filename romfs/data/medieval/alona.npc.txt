@@ -1,0 +1,51 @@
+npc Alona
+position 58 15
+size 38 30
+sprite characters 94 2
+tone 5
+mood LOVE
+
+branch
+    when none
+    say
+        Hola buenas.
+    end
+end
+
+branch
+    when ALONA_state1 false
+    say
+        ¡Hola buenas, Lucía!\n¿qué tal?
+    end
+
+    choice Bien, ¿y tú?
+        set ALONA_state1 true
+    end
+end
+
+branch
+    when ALONA_state1 true
+    say
+        Pues aquí, bebiendo protes diarias\nen el Monte del Destino.
+        Es mejor Mordor que Madrid en verano.\nTe lo digo yo.
+        Pero bueno.\nFull gimnasio para reventar al patriarcado.
+    end
+    
+    choice No ralles. ¡Entrenas un montón!
+        set ALONA_state2 true
+    end
+end
+
+branch
+    when ALONA_state2 true
+    say
+        ¡Es que el volumen no se hace solo!
+        Además, estoy rodando un corto\nsobre lo buenas que están las aceitunas.
+        No lo entenderías, muy de Madrid.
+    end
+    
+    set
+        ALONA_state1 false
+        ALONA_state2 false
+    end
+end

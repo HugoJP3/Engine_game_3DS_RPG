@@ -1,0 +1,21 @@
+npc Peter, hijo de la Muerte
+position 34 11
+size 37 31
+sprite characters 0 0
+tone 5
+mood ATTACK
+
+branch
+    when none
+    say
+        ¡Hola, señorita!
+        ¿Me deja practicar con usted?
+        Papá dice que tengo que ser\nmu amable y comprensivo.
+        He pensado decorar mi guadaña\ncon fotos de hello kitty...
+        Cinnamoroll, Pochacco, Kuromi, Melody...
+        Es súper aesthetic y cuqui,\nmucho más actual, ¿me captas?
+        Papá dice que ser la Muerte\nes como muy importante y tal.
+        Pero yo preferiría ser\ningeniero de caminos o algo así, no sé.
+        ¿No crees que en el Inframundo\nnecesitan más rotondas?
+    end
+end

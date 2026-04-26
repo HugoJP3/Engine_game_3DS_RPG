@@ -1,0 +1,18 @@
+npc Muerto
+position 11 22.5
+size 35 22
+sprite characters 33 0
+tone 0
+
+branch
+    when none
+    say
+        ...
+        ...
+        ...
+        Baby (whoo-hoo),\nWhere the hell is my husband?
+        What is taking him so long\nto find me?
+        Oh, baby,\nwhere the hell is my husband?
+        ... Na ... Na ...
+    end
+end
