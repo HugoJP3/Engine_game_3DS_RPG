@@ -1,0 +1,20 @@
+npc Samanta
+position 12 5
+size 36 27
+sprite characters 65 0
+tone 4
+
+branch
+    when none
+    say
+        Buenos días.
+        Si llevo mi casa a cuestas,\nsoy prisionera.
+        Si no llevo casa,\nestoy desnuda...
+        De ser así, quizás nunca he\ntenido ni casa ni piel...
+        Quizás no estoy desnuda.\nQuizás el mundo está sobrevestido.
+        Y yo soy la única que no finge...
+        ...
+        También puede ser que\nsolo sea una babosa...
+        Y esté dándole demasiadas vueltas\na no tener pantalones.
+    end
+end

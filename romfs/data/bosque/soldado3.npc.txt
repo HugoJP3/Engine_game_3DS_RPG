@@ -3,6 +3,7 @@ position 80 11
 size 43 28
 sprite characters 40 0
 tone 3
+show show_soldados false
 
 branch
     when none

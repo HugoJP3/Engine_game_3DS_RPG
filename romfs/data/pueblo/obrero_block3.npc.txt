@@ -1,0 +1,14 @@
+npc Obrero Pablo
+position 11 61
+size 25 59
+sprite characters 86 4 0.07
+tone 0
+show show_obreros false
+
+branch
+    when none
+    say
+        Tengo compañeros que no están\ndados de alta...
+        ¿Te lo puedes creer?
+    end
+end

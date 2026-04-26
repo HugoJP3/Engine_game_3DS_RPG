@@ -236,6 +236,23 @@ void DialogueManager::update(float dt, u32 kDown) {
     }
 }
 
+float expressionOffsetX(Expression e) {
+    switch (e) {
+        case ALERTED:
+            return 2.0f;
+        case CHAT:
+            return 4.5f;
+        case ATTACK:
+            return 3.5f;
+        case LOVE:
+            return 4.5f;
+        case CONFUSED:
+            return 3.0f;
+        default:
+            return 2.5f;
+    }
+}
+
 void DialogueManager::call_expression(float draw_x, float draw_y, Expression expression) {
     C2D_Image img = C2D_SpriteSheetGetImage(ui_dialogue, expression);
     C2D_DrawImageAt(img, draw_x, draw_y, 0.95f, NULL, Config::globalScale, Config::globalScale);
@@ -256,7 +273,7 @@ void DialogueManager::call_expression(Entity* ent, float camX, float camY) {
     screenY -= 10.0f * Config::globalScale; 
     
     // 4. Centramos el icono (si el icono mide 16px, restamos 8 * escala)
-    screenX -= 2.5f * Config::globalScale;
+    screenX -= expressionOffsetX(expression) * Config::globalScale;
 
     // Dibujamos
     C2D_Image img = C2D_SpriteSheetGetImage(ui_dialogue, expression);

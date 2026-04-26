@@ -1,0 +1,24 @@
+npc Carta de Hugo
+position 13 2
+size 12 16
+sprite efectos 3
+mood LOVE
+tone 1
+
+branch
+    when none
+    say
+        Hola Lucía,\nEspero que esta carta te llegue bien...
+        ¿Sigue yendo a tu tienda\nesa babosa tan rara?
+        Ah, por cierto...
+        Al final me dejaron irme de la playa.\nCreo que había obras o algo así.
+        Me he ido a Coldor a comprar el pan.
+        Dicen que ahí está muy churrascao.
+        Ven a buscarme.
+        ¡No tardes!
+    end
+    
+    set
+        show_soldados true
+    end
+end

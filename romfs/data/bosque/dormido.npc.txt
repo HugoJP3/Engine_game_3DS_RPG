@@ -1,7 +1,7 @@
 npc José niño dormido
 position 8 20
 size 46 30
-sprite characters 9 4 0.8
+sprite characters 9 4 0.3
 tone 2
 
 branch

@@ -2,3 +2,4 @@ size 50 65
 music poblado.wav
 tp pueblo_bosque_tp.csv romfs:/data/bosque 68 22
 tp pueblo_playa_tp.csv romfs:/data/playa 23 1
+tp pueblo_boutique_tp.csv romfs:/data/boutique 4 7

@@ -1,0 +1,79 @@
+npc Empleado
+position 5 1
+size 39 31
+sprite characters 70 0
+tone 9
+
+branch
+    when none
+    say
+        Hola jefa.
+    end
+end
+
+branch
+    when EMPLEADO_intro false
+    say
+        ¡Bienvenida a la Boutique!
+        ¿Desea una concha de seda o...?
+        ...
+        ¡Aiba, jefa! ¡Qué susto!
+        Pensaba que era una clienta.
+    set
+        EMPLEADO_intro true
+    end
+end
+
+branch
+    when EMPLEADO_intro true
+    say
+        ¿Qué pasa, jefa? ¿Alguna orden\no solo viene a vigilarme?
+    end
+
+    choice Quiero chisme.
+        set EMPLEADO_cotilleo true
+    end
+
+    choice ¡ESTÁS DESPEDIDO!
+        set EMPLEADO_despido true
+    end
+
+    choice Cuéntate algo chulo.
+        set EMPLEADO_lore true
+    end
+end
+
+branch
+    when EMPLEADO_cotilleo true
+    say
+        Dicen que el Alcalde se\nbebió el abrillantador VIP.
+        Ahora brilla tanto que no\nnecesita usar farolas.
+        Es un político brillante...
+        Literalmente.
+    set
+        EMPLEADO_cotilleo false
+    end
+end
+
+branch
+    when EMPLEADO_despido true
+    say
+        ¡No puede despedirme!
+        ¡Me declaro en estado de\nhibernación sindical!
+        Además, si me voy...
+        ¿quién va a lamer el suelo\npara que brille tanto?
+    set
+        EMPLEADO_despido false
+    end
+end
+
+branch
+    when EMPLEADO_lore true
+    say
+        Coldor da miedo, jo...
+        Se dice que unos Caracobbits que\nsalieron hacia allí hace años.
+        ¿Dónde estarán ahora?
+    set
+        EMPLEADO_lore false
+    end
+end

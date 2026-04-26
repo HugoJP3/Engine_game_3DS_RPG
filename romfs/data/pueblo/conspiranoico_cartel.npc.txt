@@ -1,7 +1,7 @@
 npc Marcos Quiles
 position 43 41
 size 59 58
-sprite characters 92 2 0.5
+sprite characters 92 2 0.35
 tone 5
 
 branch

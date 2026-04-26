@@ -67,6 +67,7 @@ void WorldState::loadNPC(const std::string& path) {
     DialogueChoice currentChoice;
     std::vector<std::string> currentLines;
     std::vector<std::pair<std::string, bool>> currentFlagsOnEnd;
+    std::vector<std::pair<std::string,bool>> showFlags;
 
     while (std::getline(file, line)) {
         if (line.empty() || line[0] == '#') continue;
@@ -109,6 +110,16 @@ void WorldState::loadNPC(const std::string& path) {
         }
         else if (word == "tone") {
             ss >> npcTone;
+        }
+        else if (word == "show") {
+            TextParser tp;
+            std::string flag;
+            std::string valStr;
+
+            ss >> flag >> valStr;
+
+            bool val = (valStr == "true");
+            showFlags.push_back({tp.trim(flag), val});
         }
 
         // --- BRANCH ---
@@ -224,6 +235,10 @@ void WorldState::loadNPC(const std::string& path) {
 
     if (spriteSheets.count(spriteName)) {
         npc->setSpriteSheet(spriteSheets[spriteName]);
+    }
+
+    for (auto& s : showFlags) {
+        npc->addShowFlag(s.first, s.second);
     }
 
     characters.push_back(npc);
@@ -549,7 +564,8 @@ Entity* WorldState::getInteractableEntity(float maxDistance)
 
     // Procesar NPCs
     for (NPC* npc : characters)
-        processEntity(npc);
+        if (npc->isVisible())
+            processEntity(npc);
 
     // Procesar objetos
     for (Object* obj : objetos)
@@ -585,6 +601,7 @@ void WorldState::update(float dt, u32 kDown) {
     // --- Movimiento personajes/objetos ---
     float playerFeet = player->getY() + player->getOffsetY() + player->getColHeight();
     for (NPC* npc : characters) {
+        if (!npc->isVisible()) continue;
         npc->update(dt);
         npc->updateY(playerFeet);
     }
@@ -715,13 +732,15 @@ void WorldState::draw() {
         });
     }
 
-    for (Entity* e : characters) {
+    for (NPC* npc : characters) {
+        if (!npc->isVisible()) continue;
         renderList.push_back({
-            0.5f, // capa entidades
-            e->getY() + e->getHeight(),
-            [=]() { e->draw(camX, camY); }
+            0.5f,
+            npc->getY() + npc->getHeight(),
+            [=]() { npc->draw(camX, camY); }
         });
     }
+
 
     for (Entity* e : objetos) {
         renderList.push_back({

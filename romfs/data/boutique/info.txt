@@ -1,0 +1,3 @@
+size 15 10
+music interiores.wav
+tp boutique_pueblo_tp.csv romfs:/data/pueblo 42 29

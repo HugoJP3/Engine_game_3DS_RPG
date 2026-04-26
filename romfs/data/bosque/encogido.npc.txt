@@ -14,7 +14,7 @@ end
 branch
     when ENCOGIDO_state1 false
     say
-        Quiero ir a Pueblo Feliz...\nPero me da mucho miedo... :(
+        Quiero ir a Caracópolis...\nPero me da mucho miedo... :(
     end
 
     choice Fuas, ¿por qué no lo intentas?

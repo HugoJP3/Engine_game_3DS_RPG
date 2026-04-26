@@ -9,8 +9,8 @@ branch
     say
         Caminante, detén tu paso y escucha\nla sombra que se extiende tras el sendero.
         Más allá de estas piedras yace\nun lugar cuya luz se quiebra.
-        Si continúas, no hallarás descanso ni retorno...
+        Si continúas, no hallarás descanso...\n...ni retorno.
         ...
-        ¡Pues este camino conduce a Mordor!\nDonde la esperanza teme pronunciar palabra.
+        ¡Pues este camino conduce a Coldor!\nDonde la esperanza teme respirar.
     end
 end

@@ -20,6 +20,8 @@ class NPC : public Entity {
 
         int voiceTone = -1;
 
+        std::vector<std::pair<std::string,bool>> showFlags;
+
     public:
         NPC(float x, float y, int width, int height, int colW, int colH, std::string name, FlagManager* flagManager, int animate, int spriteIdx)
             : Entity(x, y, 0.35,
@@ -76,7 +78,7 @@ class NPC : public Entity {
             // Animación
             if (animate > 1) {
                 animTimer += dt;
-                if (animTimer >= 0.15f) {
+                if (animTimer >= velAnimation) {
                     animTimer = 0.0f;
                     baseIndex = (baseIndex + 1) % animate;
                 }
@@ -108,9 +110,31 @@ class NPC : public Entity {
             }
         }
 
+        bool isVisible() {
+            this->setSolid(true);
+            if (showFlags.empty()) return true;
+
+            for (auto& sf : showFlags) {
+                const std::string& flag = sf.first;
+                bool expected = sf.second;
+
+                if (flagManager->getFlag(flag) != expected)    
+                {            
+                    this->setSolid(false);
+                    return false;
+                }
+            }
+            return true;
+        }
+
+
         std::string getName() { return nombre; }
         void setName(const std::string& n) { nombre = n; }
 
         void setPosition(float x, float y) { setX(x); setY(y); }
         void setVel(float vel) { velAnimation = vel; }
+
+        void addShowFlag(const std::string& flag, bool expectedValue) {
+            showFlags.push_back({flag, expectedValue});
+        }
 };
