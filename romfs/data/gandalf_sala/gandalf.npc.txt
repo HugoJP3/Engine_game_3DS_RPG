@@ -8,7 +8,7 @@ mood ATTACK
 branch
     when none
     say
-        ...
+        Shhh...
         ¿Se han ido ya?
         Me hago el muerto porque estoy\ncansado ya.
         No sabes lo duro que es\ngrabar 4 horas de película.

@@ -1,0 +1,15 @@
+npc ADVERTENCIA: ESPORAS
+position 3 3
+size 12 16
+sprite efectos 3
+mood ATTACK
+tone 5
+
+branch
+    when none
+    say
+        DEPARTAMENTO DE SEGURIDAD
+        Pohibido estornudar, llorar, sudar,\nsangrar o dejar babas cerca.
+        Si nota que le brota algo del pecho,\npor favor, muérsa fuera para no manchar.
+    end
+end

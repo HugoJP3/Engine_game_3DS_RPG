@@ -1,0 +1,13 @@
+npc Nota anónima
+position 8 3
+size 12 16
+sprite efectos 3
+mood CONFUSED
+tone 5
+
+branch
+    when none
+    say
+        Si ves a un hombre con cara de rata,\ndile que me debe una taza de porcelana.
+    end
+end

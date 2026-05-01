@@ -7,7 +7,8 @@ tone 5
 branch
     when none
     say
-        Nunca debí salir de la Comarca.
-        Gandalf está...
+        ¡Nunca debí salir de la Comarca!
+        Gandalf ha caído... y yo...
+        ¡Yo no sé si he dejado el gas encendido!
     end
 end

@@ -1,0 +1,25 @@
+npc Carta de Hugo
+position 4 5
+size 12 16
+sprite efectos 3
+mood LOVE
+tone 1
+
+branch
+    when none
+    say
+        ¡SOCORRO! ¡AYUDA!
+        ME HAN ABDUCIDO
+        ...
+        jaja Es bromis, no sé cómo he acabado\nen esta sala tan raruna.
+        Voy a ver si consigo salir,\nespero que tú no te pierdas tampoco.
+        Por cierto, deberías venir a la playa.\nCreo que han acabado las obras.
+        Y quizás, haya algo esperándote ahí...
+        Me llevo una espora de estas\nque parecen sabrosas.
+        ¡RECUERDA: TE ESPERO EN LA PLAYA!\nAhora sí, jeje...
+    end
+
+    set
+        show_obreros true
+    end
+end

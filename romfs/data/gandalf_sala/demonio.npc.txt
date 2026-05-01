@@ -9,8 +9,9 @@ branch
     when none
     say
         Gandalf es amigo mío de la EGB.
-        Lo que pasa es que él hizo\nel bachiller mixto que había.
-        Y yo pues me metí de hostelería...\nen Ibiza.
+        Lo que pasa es que él hizo el bachiller\nmixto que había y opositó a mago.
+        Y yo pues me metí de hostelería...\n...en Ibiza.
         Y claro, las condiciones no son las mismas.
+        Él esquiva Balrogs y\nyo guiris de madrugada.
     end
 end
