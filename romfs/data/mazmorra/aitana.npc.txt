@@ -1,0 +1,56 @@
+npc Aitana Hiimai
+position 10 7
+size 59 30
+sprite characters 28 0
+tone 8
+mood LOVE
+
+branch
+    when none
+    say
+        Miau.
+        HOLA LUCÍA
+        No hace como ambiente de\ntetas, tetitas, bufas, maracas,
+        bombos, villalongas, batufas, melones,\nmamelongas, tetorras...
+        Miau.
+    end
+end
+
+branch
+    when AITANA_state1 false
+    say
+        MIAU MIAU MIAU MIAU\nMIAU MIAU MIAU MIAU
+        ¡HOLA LUCÍA!
+    end
+
+    choice ¿Aitana? ¿Qué haces aquí sola?
+        set AITANA_state1 true
+    end
+end
+
+branch
+    when AITANA_state1 true
+    say
+        ¡A VECES VENGO A LA OSCURIDAD\nA ESCUCHAR 21 PILOTS!
+        Es música para gente con el alma,\nmiau miau oscura...
+        No lo entenderías...\nAntes yo era diferente...
+    end
+    
+    choice ...
+        set AITANA_state2 true
+    end
+end
+
+branch
+    when AITANA_state2 true
+    say
+        ¿TE GUSTA MI SUJETADOR?
+        ...
+        tetas, tetitas, bufas, maracas,\nbombos, villalongas, batufas, melones,\nmamelongas, tetorras, balones, lolas, pechugas...
+    end
+    
+    set
+        AITANA_state1 false
+        AITANA_state2 false
+    end
+end
