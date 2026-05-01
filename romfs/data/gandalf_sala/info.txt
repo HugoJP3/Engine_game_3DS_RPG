@@ -1,0 +1,2 @@
+size 20 20
+tp gandalf_sala_mazmorra_tp.csv romfs:/data/mazmorra 1 7

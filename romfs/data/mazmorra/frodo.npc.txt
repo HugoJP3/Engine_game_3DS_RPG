@@ -1,0 +1,13 @@
+npc Frodo
+position 6 6.5
+size 28 17
+sprite characters 27 0
+tone 5
+
+branch
+    when none
+    say
+        Nunca debí salir de la Comarca.
+        Gandalf está...
+    end
+end

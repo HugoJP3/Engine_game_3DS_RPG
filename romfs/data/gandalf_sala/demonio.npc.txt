@@ -1,0 +1,16 @@
+npc Juan Pedro
+position 6 3
+size 116 75
+sprite characters 96 0
+tone 0
+mood LOVE
+
+branch
+    when none
+    say
+        Gandalf es amigo mío de la EGB.
+        Lo que pasa es que él hizo\nel bachiller mixto que había.
+        Y yo pues me metí de hostelería...\nen Ibiza.
+        Y claro, las condiciones no son las mismas.
+    end
+end

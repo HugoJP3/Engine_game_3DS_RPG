@@ -1,0 +1,5 @@
+size 20 20
+music mazmorra.wav
+tp mazmorra_gandalf_tp.csv romfs:/data/gandalf_sala 17 8
+tp mazmorra_trenza_tp.csv romfs:/data/trenza_sala 5 7
+tp mazmorra_medieval_tp.csv romfs:/data/medieval 57 12

@@ -1,0 +1,16 @@
+npc Gandalf, el gris
+position 4 7
+size 55 32
+sprite characters 68 0
+tone 0
+mood ATTACK
+
+branch
+    when none
+    say
+        ...
+        ¿Se han ido ya?
+        Me hago el muerto porque estoy\ncansado ya.
+        No sabes lo duro que es\ngrabar 4 horas de película.
+    end
+end
