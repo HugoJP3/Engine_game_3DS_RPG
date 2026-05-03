@@ -1,0 +1,14 @@
+npc Nudista Fermín
+position 46 2
+size 36 27
+sprite characters 65 0
+tone 4
+
+branch
+    when none
+    say
+        A dios le pido un poco de maldad\ny al demonio un poco de tiempo.
+        ...
+        Pero me puse las pilas y mira,\ncómete mi éxito.
+    end
+end

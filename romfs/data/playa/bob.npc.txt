@@ -1,0 +1,16 @@
+npc Bob Ross
+position 20 7
+size 79 46
+sprite characters 8 0
+tone 3
+
+branch
+    when none
+    say
+        A veces pinto otro tipo de paisajes...
+        Vamos a añadir un poco de blanco\npor aquí.
+        La idea de los Deepfakes fue de\nWang Chen.
+        Si lo haces bien, se lo tragan en Reddit.
+        Lo más difícil es elegir el prompt.
+    end
+end

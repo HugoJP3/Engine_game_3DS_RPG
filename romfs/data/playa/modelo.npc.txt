@@ -1,0 +1,16 @@
+npc Wang Chi-Lei
+position 17 7
+size 37 39
+sprite characters 29 0
+tone 0
+
+branch
+    when none
+    say
+        No soy una conejita, soy Wang Chen.
+        Bob y yo hemos encontrado un\nnegocio millonario: Deepfakes artesanales.
+        Él pone el óleo y yo las posturas\nsugerentes.
+        Es más barato que pagar a\nuna IA.
+        Me pica una oreja, pero si me muevo\npierdo el renderizado.
+    end
+end

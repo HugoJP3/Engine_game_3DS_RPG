@@ -1,0 +1,64 @@
+npc Hugo
+position 55 20
+size 25 15
+sprite characters 97 0
+tone 5
+
+branch
+    when none
+    say
+        Hola amorcito.
+    end
+end
+
+branch
+    when HUGO_state1 false
+    say
+        Hola amorcito.
+        Lo siento por haberte hecho dar\ntantas vueltas.
+    end
+
+    choice No pasa nada.
+        set HUGO_state1 true
+    end
+
+    choice Pensaba que te habías perdido.
+        set HUGO_state1 true
+    end
+end
+
+branch
+    when HUGO_state1 true
+    say
+        He estado de aquí para allá...\nchilleando...
+        No sabía muy bien que regalarte, ¿sabes?
+        Querría haberte regalado un faro.\nUn día lo haré.
+        Pero la economía no está para tal.
+    end
+
+    choice ¿Qué quieres decir?
+        set HUGO_state2 true
+    end
+end
+
+branch
+    when HUGO_state2 true
+    say
+        Bueno, no podía comprarte un faro\nen la vida real.
+        Así que te he montado uno en\neste juego.
+        Si algún día nos hacemos caracoles,\npodemos venir aquí.
+    end
+    choice Te quiero.
+        set HUGO_generic true
+    end
+end
+
+branch
+    when HUGO_generic true
+    say
+        Yo también te quiero.
+    end
+    set
+        FLAG_FIN true
+    end
+end

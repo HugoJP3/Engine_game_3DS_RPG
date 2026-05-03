@@ -1,0 +1,13 @@
+npc Señor Babosín
+position 14 3
+size 39 30
+sprite characters 74 0
+tone 0
+
+branch
+    when none
+    say
+        ¿Crees que la vida es dura?
+        Prueba a trabajar un jueves en el Pintxo\nKalea con dos cumpleaños y una boda.
+    end
+end

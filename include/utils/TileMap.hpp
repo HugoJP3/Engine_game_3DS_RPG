@@ -92,9 +92,10 @@ public:
                         float drawX = std::floorf(posX - camX) * Config::globalScale;
                         float drawY = std::floorf(posY - camY) * Config::globalScale;
 
+                        float epsilon = 0.01f;
                         C2D_Image img = C2D_SpriteSheetGetImage(sheet, tileID);
                         C2D_DrawImageAt(img, drawX, drawY, layerZ, NULL, 
-                            Config::globalScale, Config::globalScale);
+                            Config::globalScale + epsilon, Config::globalScale + epsilon);
                     }
                 }
             }

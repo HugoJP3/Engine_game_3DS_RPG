@@ -1,0 +1,12 @@
+npc Nadador feliz
+position 10 4
+size 35 39
+sprite characters 79 0
+tone 2
+
+branch
+    when none
+    say
+        ...
+    end
+end

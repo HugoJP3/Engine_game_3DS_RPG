@@ -31,7 +31,7 @@ end
 branch
     when LN_state1 true
     say
-        Ya...\nEstoy un poco rayada...\nAhora en un rato los busco mejor...
+        Ya... Estoy un poco rayada...\nAhora en un rato los busco mejor...
         ...O mejor puedo ir a darme un bañito\nJEJEJEJEJE
         JEJEJEJEJE\nJEJEJEJEJE
     end

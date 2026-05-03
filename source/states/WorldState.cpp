@@ -289,6 +289,7 @@ void WorldState::loadLevelFolder(const std::string& folderPath) {
     objetos.clear();
     characters.clear();
     allTileMaps.clear();
+    hasSpecialZoom = false;
 
     
     std::map<std::string, Teleport> teleportInfo;
@@ -330,6 +331,13 @@ void WorldState::loadLevelFolder(const std::string& folderPath) {
                     infoFile >> fileName >> newTp.targetMap >> newTp.spawnX >> newTp.spawnY;
                     
                     teleportInfo[fileName] = newTp;
+                }
+                else if (key == "special_zoom") {
+                    infoFile >> targetZoomX >> targetZoomY >> zoomRadius >> minZoom;
+                    // Convertimos tiles a coordenadas de mundo inmediatamente
+                    targetZoomX *= Config::TILE_SIZE;
+                    targetZoomY *= Config::TILE_SIZE;
+                    hasSpecialZoom = true;
                 }
             }
         }
@@ -586,7 +594,24 @@ Entity* WorldState::getInteractableEntity(float maxDistance)
 
 // ACTUALIZACIÓN (FRAME):
 void WorldState::update(float dt, u32 kDown) {
-    // ===================== DEBUG EXTENSO =====================
+    // Fin del juego
+    if (!dialogueManager.isActive() && flagManager->getFlag("FLAG_FIN") == true) {
+        flagManager->setFlag("FLAG_FIN", false);
+        
+        // Ejecutar fade más lento aquí y agradecimiento
+
+        WorldState* next = new WorldState(
+            flagManager, top,
+            "romfs:/data/casa_interior",
+            10.0f * Config::TILE_SIZE,
+            11.0f * Config::TILE_SIZE,
+            player->getDirection()
+        );
+        manager->changeStateFin(next);
+    }
+
+
+    // ===================== DEBUG =====================
     {
         dialogueManager.clearDebug();
     }
@@ -692,12 +717,29 @@ void WorldState::update(float dt, u32 kDown) {
 
 
     // --- ACTUALIZAR CÁMARA ---
-    const float screenW_world = 400.0f / Config::globalScale;
-    const float screenH_world = 240.0f / Config::globalScale;
-
     // Centrar por el centro del héroe:
     float heroCenterX = player->getX() + player->getWidth() / 2.0f;
     float heroCenterY = player->getY() + player->getHeight() / 2.0f;
+
+    float targetScale = 2.0f; // Escala por defecto
+    if (hasSpecialZoom) {
+        float dx = heroCenterX - targetZoomX;
+        float dy = heroCenterY - targetZoomY;
+        float dist = sqrtf(dx*dx + dy*dy);
+
+        if (dist < zoomRadius * Config::TILE_SIZE) {
+            float t = dist / (zoomRadius * Config::TILE_SIZE); // Factor distancia
+            targetScale = minZoom + (2.0f - minZoom) * t;
+
+            // Seguridad:
+            if (targetScale < minZoom) targetScale = minZoom;
+            if (targetScale > 2.0f) targetScale = 2.0f;
+        }
+    }
+    Config::globalScale += (targetScale - Config::globalScale) * 0.05f;
+
+    const float screenW_world = 400.0f / Config::globalScale;
+    const float screenH_world = 240.0f / Config::globalScale;
 
     camX = heroCenterX - screenW_world / 2.0f;
     camY = heroCenterY - screenH_world / 2.0f;
@@ -711,8 +753,6 @@ void WorldState::update(float dt, u32 kDown) {
 
     if (camX > mapaAncho - screenW_world) camX = mapaAncho - screenW_world;
     if (camY > mapaAlto - screenH_world) camY = mapaAlto - screenH_world;
-    
-
     
     // DEBUG
     DBG("CPU:    %6.2f%%", C3D_GetProcessingTime()*6.0f);
@@ -819,4 +859,6 @@ WorldState::~WorldState() {
     if (player) delete player;
 
     spriteSheets.clear();
+
+    Config::globalScale = 2.0f; // Devolver valor por defecto
 }

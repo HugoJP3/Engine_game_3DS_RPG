@@ -1,0 +1,13 @@
+npc Bombera Antonieta
+position 47 6
+size 96 32
+sprite characters 82 2 0.1
+tone 8
+
+branch
+    when none
+    say
+        Los gatos no necesitan que\nlos rescatemos de los árboles.
+        Prefiero venir aquí a ayudar\na recuperar el nivel del mar.
+    end
+end

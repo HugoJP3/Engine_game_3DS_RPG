@@ -1,0 +1,15 @@
+npc Nudista Lola
+position 47 3
+size 36 27
+sprite characters 65 0
+tone 4
+
+branch
+    when none
+    say
+        Y yo, voy a beberme hasta las copas\nde los árboles.
+        Voy a tomar de todo\nmenos decisiones.
+        Suave como una nube\nvoy a ser vapor.
+        Un ave,\nque sube y sube, sin motor.
+    end
+end

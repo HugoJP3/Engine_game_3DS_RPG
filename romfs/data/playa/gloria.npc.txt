@@ -1,0 +1,60 @@
+npc Gloria
+position 32 6
+size 38 30
+sprite characters 90 2 0.15
+tone 7
+mood LOVE
+
+branch
+    when none
+    say
+        ¡Hola, guapa!
+        Me iría contigo pero estoy esperando\na que llegue mi novio de Miami.
+        Está aterrizando en su jet\nprivado... otra vez.
+    end
+end
+
+branch
+    when GLORIA_state1 false
+    say
+        ¡Hola, guapa!
+        Me iría contigo pero estoy esperando\na que llegue mi novio de Miami.
+        Está aterrizando en su jet\nprivado... otra vez.
+    end
+
+    choice Gloria, eso suena falsísimo...
+        set GLORIA_state1 true
+    end
+
+    choice Sí, sí... lo que tú digas...
+        set GLORIA_state1 true
+    end
+end
+
+branch
+    when GLORIA_state1 true
+    say
+        ¿Perdón?
+        Iba a venir ayer, pero me llamó llorando\nporque su mono se había escapado.
+        Es muy cariñoso con sus mascotas.\nSobre todo con el jaguar y con Bruni.
+        Bruni es como llama al perro\nque le regaló Bruno Mars.
+    end
+    
+    choice Gloria, no hace falta que me mientas.
+        set GLORIA_state2 true
+    end
+end
+
+branch
+    when GLORIA_state2 true
+    say
+        ...
+        Mira, vuelve cuando tengas un novio\nque le preste ferraris a Shawn Mendes.
+        Voy a seguir esperándole, que nos vamos\na los Grammy a animar a Harry.
+    end
+    
+    set
+        GLORIA_state1 false
+        GLORIA_state2 false
+    end
+end

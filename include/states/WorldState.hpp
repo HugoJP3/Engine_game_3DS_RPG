@@ -64,6 +64,9 @@ class WorldState : public State {
 
         float camX = 0, camY = 0;
 
+        bool hasSpecialZoom = false;
+        float targetZoomX, targetZoomY, zoomRadius, minZoom;
+
     public:
         WorldState(FlagManager* flagManager, C3D_RenderTarget* screen, std::string path, float startX, float startY, HeroDirection startDir = DIR_SIDE_RIGHT);
         ~WorldState();

@@ -1,0 +1,17 @@
+npc Chadwick Millionaire de Miami
+position 41 1
+size 41 38
+sprite characters 46 0
+tone 7
+mood LOVE
+
+branch
+    when none
+    say
+        Muy buenas, señorita.
+        ¿Ha visto a usted a mi novia?\nEs una chica hermosa, la más guapa.
+        Se llama Gloria...
+        Querría llamarle pero mi iPhone Luxury\nPro Max X no funciona.
+        ¿La ha visto?
+    end
+end
