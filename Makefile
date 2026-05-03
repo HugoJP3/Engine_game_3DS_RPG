@@ -40,6 +40,9 @@ GRAPHICS	:=	gfx
 #GFXBUILD	:=	$(BUILD)
 ROMFS		:=	romfs
 GFXBUILD	:=	$(ROMFS)/gfx
+APP_TITLE       := Caracopolis
+APP_DESCRIPTION := Un RPG absurdo y poco más
+APP_AUTHOR      := Hugo Jarrín
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -180,7 +183,7 @@ endif
 #---------------------------------------------------------------------------------
 clean:
 	@echo clean ...
-	@rm -fr $(BUILD) $(TARGET).3dsx $(OUTPUT).smdh $(TARGET).elf $(GFXBUILD)
+	@rm -fr $(BUILD) $(TARGET).3dsx $(OUTPUT).smdh $(TARGET).elf $(GFXBUILD) $(TARGET).cia
 
 #---------------------------------------------------------------------------------
 $(GFXBUILD)/%.t3x	$(BUILD)/%.h	:	%.t3s
@@ -189,6 +192,20 @@ $(GFXBUILD)/%.t3x	$(BUILD)/%.h	:	%.t3s
 	@tex3ds -i $< -H $(BUILD)/$*.h -d $(DEPSDIR)/$*.d -o $(GFXBUILD)/$*.t3x
 
 #---------------------------------------------------------------------------------
+
+cia: all
+	@echo "Generando CIA..."
+	@makerom -f cia \
+		-o $(TARGET).cia \
+		-elf $(OUTPUT).elf \
+		-rsf template.rsf \
+		-icon $(TARGET).smdh \
+		-exefslogo
+
+	@echo "---------------------------"
+	@echo "¡CIA GENERADO CON ÉXITO!"
+	@echo "---------------------------"
+
 else
 
 #---------------------------------------------------------------------------------
