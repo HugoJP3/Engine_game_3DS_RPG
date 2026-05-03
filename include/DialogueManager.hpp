@@ -63,6 +63,7 @@ class DialogueManager {
         DialogueManager(FlagManager* flagManager);
         ~DialogueManager();
 
+        void startQuickDialogue(std::string text, std::string speakerName);
         void startDialogue(const std::vector<DialogueBranch>& branches, std::string name, int tone = -1);
         void update(float dt, u32 kDown);
 

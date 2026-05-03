@@ -1,0 +1,3 @@
+objects 8 8 47 0.3 16 16 1 DBD_dinamita 8 Dinamita
+objects 7 14 20 0.3 16 16 1 DBD_shuriken 7 Shuriken
+objects 14 36 33 0.4 16 16 1 DBD_regadera 14 Laca de Greaser

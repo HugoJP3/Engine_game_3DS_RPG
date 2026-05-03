@@ -1,0 +1,23 @@
+--atlas
+-f rgba
+
+objects/Inventory.png
+
+objects/Sushi.png
+objects/Book.png
+objects/Dice.png
+objects/Hourglass.png
+objects/MoneyBag.png
+objects/Heart.png
+objects/Shuriken.png
+objects/Dynamite.png
+objects/Arrow.png
+objects/MilkPot.png
+objects/Branch.png
+objects/Rock.png
+objects/ScrollEmpty.png
+objects/WateringCan.png
+objects/Axe.png
+objects/SilverCup.png
+objects/Hit.png
+objects/Fish.png

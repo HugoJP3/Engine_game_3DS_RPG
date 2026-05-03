@@ -1,3 +1,6 @@
-basic_plants 11 10 8 0.3 16 16 1 BAYA_FRUTO 0
-basic_plants 6 11 8 0.3 16 16 1 BAYA_BOLSA 1
-basic_plants 5 12 8 0.3 16 16 1 TRIGO_FRUTO 2
+objects 11 19 8 0.3 16 16 1 DBD_rama 11 Rama rota de Ent
+objects 10 96 3 0.4 16 16 1 DBD_leche 10 Bote de leche
+objects 12 23 16 0.3 16 16 1 DBD_roca 12 Roca dura
+objects 13 60 2 0.3 16 16 1 DBD_memorias 13 Poemas para L.
+objects 15 32 5 0.3 16 16 1 DBD_hacha 15 Hacha de Gimli
+objects 3 73 5 0.3 16 16 1 DBD_dado 3 Dado del destino

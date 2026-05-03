@@ -42,8 +42,9 @@ int main()
     float initialY = 11 * Config::TILE_SIZE;
     SceneManager* manager = new SceneManager(topTarget, bottomTarget);
     //manager->changeState(new WorldState(&flagManager, topTarget, "romfs:/data/casa_interior", initialX, initialY)); // Empezar en mundo
-    //manager->changeState(new WorldState(&flagManager, topTarget, "romfs:/data/medieval", 52*Config::TILE_SIZE, 15*Config::TILE_SIZE)); // Empezar en medieval
-    manager->changeState(new WorldState(&flagManager, topTarget, "romfs:/data/playa", 22*Config::TILE_SIZE, 4*Config::TILE_SIZE)); // Empezar en playa
+    //manager->changeState(new WorldState(&flagManager, topTarget, "romfs:/data/medieval", 3*Config::TILE_SIZE, 9*Config::TILE_SIZE)); // Empezar en medieval
+    //manager->changeState(new WorldState(&flagManager, topTarget, "romfs:/data/playa", 22*Config::TILE_SIZE, 4*Config::TILE_SIZE)); // Empezar en playa
+    manager->changeState(new WorldState(&flagManager, topTarget, "romfs:/data/pueblo", 41*Config::TILE_SIZE, 33*Config::TILE_SIZE)); // Empezar en playa
     
     // Delta Time:
     u64 tiempoAnterior = osGetTime();

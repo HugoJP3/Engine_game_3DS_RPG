@@ -30,16 +30,12 @@ WorldState::WorldState(FlagManager* flagManager,
       camY(0.0f) {}
 
 // GENERAR UN OBJETO
-void WorldState::spawnObject(std::string sheetName, int idx, float x, float y, float z, int width, int height, int itemIndex) {
-    if (spriteSheets.count(sheetName)) {
-        Object* obj = new Object(x*Config::TILE_SIZE, y*Config::TILE_SIZE, z, width, height, idx, itemIndex, flagManager);
-        obj->setSpriteSheet(spriteSheets[sheetName]);
-        obj->init();
+void WorldState::spawnObject(std::string sheetName, int idx, float x, float y, float z, int width, int height, int itemIndex, std::string name) {
+    Object* obj = new Object(x*Config::TILE_SIZE, y*Config::TILE_SIZE, z, width, height, idx, itemIndex, name, flagManager);
+    obj->setSpriteSheet(ResourceManager::get().get(sheetName));
+    obj->init();
 
-        objetos.push_back(obj);
-    } else {
-        //printf("ERROR: No existe el sheet %s\n", sheetName.c_str());
-    }
+    objetos.push_back(obj);
 }
 
 // CARGAR MAPA PERSONAJE (.TXT)
@@ -251,7 +247,7 @@ void WorldState::loadObject(const std::string& path) {
     int spriteIdx;
     bool isSolid;
     float x, y, z, width, height;
-    std::string flag;
+    std::string flag, name;
     int itemIndex;
 
     std::string line;
@@ -260,6 +256,11 @@ void WorldState::loadObject(const std::string& path) {
 
         std::stringstream ss(line);
         ss >> sheetName >> spriteIdx >> x >> y >> z >> width >> height >> isSolid >> flag >> itemIndex;
+        std::getline(ss, name);
+        if (!name.empty() && name[0] == ' ')
+            name.erase(0, 1);
+        name = TextParser().trim(name);
+
 
         // Gestión flag
         if (flagManager->getCurrentFlags().count(flag) == 0) {
@@ -271,7 +272,7 @@ void WorldState::loadObject(const std::string& path) {
 
         // Spawnear objeto
         size_t prevSize = objetos.size();
-        spawnObject(sheetName, spriteIdx, x, y, z, width, height, itemIndex);
+        spawnObject(sheetName, spriteIdx, x, y, z, width, height, itemIndex, name);
         if (objetos.size() > prevSize) {
             Object* obj = objetos.back();
             if (isSolid) obj->setSolid(true);
@@ -433,7 +434,6 @@ void WorldState::loadLevelFolder(const std::string& folderPath) {
 // CREACIÓN DEL MAPA:
 void WorldState::init() {
     spriteSheets["hero"]        = ResourceManager::get().get("hero");
-    spriteSheets["basic_plants"]= ResourceManager::get().get("basic_plants");
     spriteSheets["tiles"]       = ResourceManager::get().get("tiles");
     spriteSheets["other"]       = ResourceManager::get().get("other");
     spriteSheets["ruinas"]      = ResourceManager::get().get("ruinas");
@@ -785,7 +785,7 @@ void WorldState::draw() {
     for (Entity* e : objetos) {
         renderList.push_back({
             0.5f,
-            e->getY() + e->getHeight(),
+            e->getY() + e->getOffsetY() + e->getColHeight(),
             [=]() { e->draw(camX, camY); }
         });
     }

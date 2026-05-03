@@ -1,0 +1,1 @@
+objects 9 13 8 0.3 16 16 1 DBD_flecha 9 Flecha de Legolas

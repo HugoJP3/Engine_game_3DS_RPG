@@ -72,6 +72,21 @@ DialogueBranch DialogueManager::getNextBranch() {
     return allBranches[0];
 }
 
+void DialogueManager::startQuickDialogue(std::string text, std::string speakerName) {
+    active = true;
+    character_name = speakerName;
+    voiceTone = -1; // Tono por defecto
+    
+    // Creamos una rama artificial para que el sistema de update funcione
+    currentBranch = {};
+    currentBranch.lines.push_back(text);
+    
+    currentLineIdx = 0;
+    charIdx = 0;
+    inChoiceMode = false;
+    voiceCooldown = 0.0f;
+}
+
 void DialogueManager::startDialogue(const std::vector<DialogueBranch>& branches, std::string name, int tone) {
     allBranches = branches;
     DialogueBranch dialogueBranch = getNextBranch();

@@ -15,7 +15,6 @@
 #include "entities/Object.hpp"
 #include "entities/Entity.hpp"
 #include "entities/NPC.hpp"
-#include "entities/basic_plants_data.hpp"
 #include "utils/TileMap.hpp"
 #include "utils/collisionTypes.hpp"
 #include "SceneManager.hpp"
@@ -71,7 +70,7 @@ class WorldState : public State {
         WorldState(FlagManager* flagManager, C3D_RenderTarget* screen, std::string path, float startX, float startY, HeroDirection startDir = DIR_SIDE_RIGHT);
         ~WorldState();
 
-        void spawnObject(std::string sheetName, int idx, float x, float y, float z, int width, int height, int itemIndex);
+        void spawnObject(std::string sheetName, int idx, float x, float y, float z, int width, int height, int itemIndex, std::string name);
         void loadNPC(const std::string& path); // cargar .txt con personaje
         void loadObject(const std::string& path); // cargar .txt con objetos
         void loadLevelFolder(const std::string& folderPath); // cargar carpeta con .csv y .txt (llama a crear layer o loadMap)

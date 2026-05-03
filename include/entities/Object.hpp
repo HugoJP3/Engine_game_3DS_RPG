@@ -10,9 +10,10 @@ class Object : public Entity {
         int itemIndex;
 
         std::string flagOnGet;
+        std::string name;
         
     public:
-        Object(float x, float y, float z, int width, int height, int baseIndex, int itemIndex, FlagManager* flagManager);
+        Object(float x, float y, float z, int width, int height, int baseIndex, int itemIndex, std::string name, FlagManager* flagManager);
         ~Object();
         
         void init() override;

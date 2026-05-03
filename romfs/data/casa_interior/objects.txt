@@ -1,0 +1,1 @@
+objects 2 8 8 0.3 16 16 1 DBD_libro 2 Mi familia y otros animales

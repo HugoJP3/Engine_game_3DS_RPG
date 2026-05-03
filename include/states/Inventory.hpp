@@ -16,7 +16,7 @@ class Inventory {
 
     public:
         Inventory(C3D_RenderTarget* target) : bottom(target) {
-            itemSheets = ResourceManager::get().get("inventory");
+            itemSheets = ResourceManager::get().get("objects");
         }
 
         ~Inventory() {}
@@ -48,19 +48,22 @@ class Inventory {
 
         void draw() {
             C2D_SceneBegin(bottom);
-            C2D_TargetClear(bottom, C2D_Color32(30, 30, 30, 255)); // Fondo gris oscuro
+            C2D_TargetClear(bottom, C2D_Color32(0, 0, 0, 255));
 
-            float startX = 20.0f;
-            float startY = 20.0f;
-            float spacing = 48.0f; // Espacio entre iconos
+            // Dibujado UI básica
+            C2D_Image ui = C2D_SpriteSheetGetImage(itemSheets, 0);
+            C2D_DrawImageAt(ui, 0, 0, 0.1f);
+
+            // Dibujado objetos
+            float startX = 21.0f;
+            float startY = 50.5f;
+            float spacingX = 49.0f; // 48-50 // Espacio entre iconos
+            float spacingY = 52.5f; // 52-53 Espacio entre iconos
             int itemsPerRow = 6;
 
             for (size_t i = 0; i < inventario.size(); i++) {
-                float x = startX + (i % itemsPerRow) * spacing;
-                float y = startY + (i / itemsPerRow) * spacing;
-
-                // Dibujar un recuadro de fondo para el slot (sustituir por sprite)
-                C2D_DrawRectSolid(x - 4, y - 4, 0.5f, 40, 40, C2D_Color32(60, 60, 60, 255));
+                float x = startX + (i % itemsPerRow) * spacingX;
+                float y = startY + (i / itemsPerRow) * spacingY;
 
                 // Dibujar el icono del item
                 C2D_Image img = C2D_SpriteSheetGetImage(itemSheets, inventario[i].ItemIndex);

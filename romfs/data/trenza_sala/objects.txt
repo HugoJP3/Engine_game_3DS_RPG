@@ -1,0 +1,1 @@
+objects 5 4 4 0.5 16 16 1 DBD_esporas 5 Bolsa de esporas

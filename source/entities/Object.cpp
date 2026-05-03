@@ -1,12 +1,13 @@
 // Características de un objeto genérico
 #include "entities/Object.hpp"
+#include "DialogueManager.hpp"
 
-Object::Object(float x, float y, float z, int width, int height, int baseIndex, int itemIndex, FlagManager* flagManager)
+Object::Object(float x, float y, float z, int width, int height, int baseIndex, int itemIndex, std::string name, FlagManager* flagManager)
     : Entity(x, y, z,
         width, height,
         width, height,
         flagManager),
-        baseIndex(baseIndex), itemIndex(itemIndex) {}
+        baseIndex(baseIndex), itemIndex(itemIndex), name(name) {}
 
 Object::~Object() {}
 
@@ -31,16 +32,22 @@ void Object::draw(float camX, float camY) {
 
 void Object::takeObject() {
     flagManager->setFlag(flagOnGet, true);
-    //Sound& object = AudioManager::get().getSound("romfs:/audio/object.wav");
-    //AudioManager::get().playSFX(object);
 }
 
 void Object::onInteract(InteractionContext& ctx) {
-    this->takeObject();
+    this->takeObject(); // Activa el flag
 
     if (ctx.inventory) {
         ctx.inventory->addItemIndex(this->getItemIndex());
     }
 
+    // DISPARAR DIÁLOGO
+    if (ctx.dialogueManager) {
+        // Formateamos el mensaje: "Has encontrado X"
+        std::string mensaje = "Has encontrado " + this->name + ".";
+        ctx.dialogueManager->startQuickDialogue(mensaje, "");
+    }
+
+    // Marcamos para borrar
     this->setPendingRemoval(true);
 }
