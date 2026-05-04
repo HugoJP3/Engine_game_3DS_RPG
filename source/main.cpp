@@ -63,6 +63,7 @@ int main()
 		if (kDown & KEY_START) break; // Condición salida
 
         // DEBUG:
+        /*
         if (kDown & KEY_X) {
             Config::showColissions = !Config::showColissions;
         }
@@ -72,6 +73,7 @@ int main()
         else if (kHeld & KEY_L) {
             Config::globalScale -= dt;
         }
+        */
         
         // Touch screen Input
 		touchPosition touch;

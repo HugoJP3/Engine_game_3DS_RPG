@@ -1,2 +1,2 @@
-objects 17 22 22 0.3 16 16 1 DBD_guante 7 Guante de muerto
+objects 17 22 22 0.3 16 16 1 DBD_guante 17 Guante de muerto
 objects 4 53 7 0.3 16 16 1 DBD_reloj 4 Reloj de arena

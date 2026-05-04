@@ -2,5 +2,5 @@
 
 namespace Config {
     float globalScale = 2.0f;
-    bool showColissions = true;
+    bool showColissions = false;
 }
